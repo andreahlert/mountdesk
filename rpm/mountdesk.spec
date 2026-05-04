@@ -39,42 +39,42 @@ Features:
 
 %install
 # Scripts
-install -Dm755 bin/mountdesk-open-link       %{buildroot}%{_bindir}/mountdesk-open-link
-install -Dm755 bin/mountdesk-fix-icons       %{buildroot}%{_bindir}/mountdesk-fix-icons
+install -Dm755 src/bin/mountdesk-open-link       %{buildroot}%{_bindir}/mountdesk-open-link
+install -Dm755 src/bin/mountdesk-fix-icons       %{buildroot}%{_bindir}/mountdesk-fix-icons
 
 # Tray app and helpers
-install -Dm755 lib/mountdesk-tray.py         %{buildroot}%{_libdir}/mountdesk/mountdesk-tray.py
-install -Dm755 lib/setup.sh                  %{buildroot}%{_libdir}/mountdesk/setup.sh
-install -Dm755 lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
-install -Dm755 lib/migrate-from-solgreen.sh  %{buildroot}%{_libdir}/mountdesk/migrate-from-solgreen.sh
+install -Dm755 src/lib/mountdesk-tray.py         %{buildroot}%{_libdir}/mountdesk/mountdesk-tray.py
+install -Dm755 src/lib/setup.sh                  %{buildroot}%{_libdir}/mountdesk/setup.sh
+install -Dm755 src/lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
+install -Dm755 src/lib/migrate-from-solgreen.sh  %{buildroot}%{_libdir}/mountdesk/migrate-from-solgreen.sh
 
 # Default config
-install -Dm644 config/config.yaml            %{buildroot}%{_sysconfdir}/mountdesk/config.yaml.example
+install -Dm644 src/config/config.yaml            %{buildroot}%{_sysconfdir}/mountdesk/config.yaml.example
 
 # Nemo extension
-install -Dm644 nemo/mountdesk-nemo.py        %{buildroot}%{_datadir}/nemo-python/extensions/mountdesk-nemo.py
+install -Dm644 src/nemo/mountdesk-nemo.py        %{buildroot}%{_datadir}/nemo-python/extensions/mountdesk-nemo.py
 
 # Desktop entry
-install -Dm644 desktop/mountdesk.desktop     %{buildroot}%{_datadir}/applications/mountdesk.desktop
+install -Dm644 src/desktop/mountdesk.desktop     %{buildroot}%{_datadir}/applications/mountdesk.desktop
 
 # Icons
-install -Dm644 icons/48x48/google-sheets.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-sheets.png
-install -Dm644 icons/48x48/google-docs.png     %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-docs.png
-install -Dm644 icons/48x48/google-slides.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-slides.png
-install -Dm644 icons/128x128/google-sheets.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-sheets.png
-install -Dm644 icons/128x128/google-docs.png   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-docs.png
-install -Dm644 icons/128x128/google-slides.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-slides.png
-install -Dm644 icons/256x256/mountdesk.png     %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/mountdesk.png
-install -Dm644 icons/scalable/mountdesk.svg    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
+install -Dm644 src/icons/48x48/google-sheets.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-sheets.png
+install -Dm644 src/icons/48x48/google-docs.png     %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-docs.png
+install -Dm644 src/icons/48x48/google-slides.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-slides.png
+install -Dm644 src/icons/128x128/google-sheets.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-sheets.png
+install -Dm644 src/icons/128x128/google-docs.png   %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-docs.png
+install -Dm644 src/icons/128x128/google-slides.png %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/google-slides.png
+install -Dm644 src/icons/256x256/mountdesk.png     %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/mountdesk.png
+install -Dm644 src/icons/scalable/mountdesk.svg    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
 
 # Systemd user service (tray only - mounts are generated dynamically)
-install -Dm644 systemd/mountdesk-tray.service  %{buildroot}%{_userunitdir}/mountdesk-tray.service
+install -Dm644 src/systemd/mountdesk-tray.service  %{buildroot}%{_userunitdir}/mountdesk-tray.service
 
 # AppData / Metainfo
-install -Dm644 metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_metainfodir}/com.mountdesk.drive.metainfo.xml
+install -Dm644 src/metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_metainfodir}/com.mountdesk.drive.metainfo.xml
 
 # MIME override for zero-size FUSE files
-install -Dm644 mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/packages/mountdesk.xml
+install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/packages/mountdesk.xml
 
 %post
 %systemd_user_post mountdesk-tray.service
