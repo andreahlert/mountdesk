@@ -46,7 +46,7 @@ install -Dm755 src/bin/mountdesk-fix-icons       %{buildroot}%{_bindir}/mountdes
 install -Dm755 src/lib/mountdesk-tray.py         %{buildroot}%{_libdir}/mountdesk/mountdesk-tray.py
 install -Dm755 src/lib/setup.sh                  %{buildroot}%{_libdir}/mountdesk/setup.sh
 install -Dm755 src/lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
-install -Dm755 src/lib/migrate-from-solgreen.sh  %{buildroot}%{_libdir}/mountdesk/migrate-from-solgreen.sh
+
 
 # Default config
 install -Dm644 src/config/config.yaml            %{buildroot}%{_sysconfdir}/mountdesk/config.yaml.example
@@ -101,7 +101,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_datadir}/mime/packages/mountdesk.xml
 
 %changelog
-* Sun May 04 2026 André Ahlert <andre@aex.partners> - 1.0.0-1
+* Sun May 04 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.0-1
 - Generic cloud drive desktop integration
 - YAML-configurable drives
 - Automatic systemd service generation

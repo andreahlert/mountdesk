@@ -1,38 +1,18 @@
 # MountDesk Configuration
 # Add any rclone remote here to mount it automatically.
-#
-# Example:
-# drives:
-#   - name: "Meu Drive Pessoal"
-#     remote: "gdrive"
-#     mountpoint: "~/GoogleDrive/MeuDrive"
-#   - name: "Drive do Trabalho"
-#     remote: "gdrive-work"
-#     mountpoint: "~/Cloud/Work"
 
 drives:
-  - name: "Controladoria"
-    remote: "gdrive-controladoria"
-    mountpoint: "~/GoogleDrive/Controladoria"
-
-  - name: "Financeiro"
-    remote: "gdrive-financeiro"
-    mountpoint: "~/GoogleDrive/Financeiro"
-
-  - name: "Solgreen"
-    remote: "gdrive-solgreen"
-    mountpoint: "~/GoogleDrive/Solgreen"
-
-  - name: "MeuDrive"
+  - name: "Meu Drive"
     remote: "gdrive"
-    mountpoint: "~/GoogleDrive/MeuDrive"
+    mountpoint: "~/Cloud/MeuDrive"
+
+  - name: "Trabalho"
+    remote: "gdrive-work"
+    mountpoint: "~/Cloud/Trabalho"
 
 settings:
-  # Interval to check mount status (seconds)
   tray_refresh_interval: 5
-  # Chrome executable path
   chrome: "google-chrome-stable"
-  # Icon theme for Google file types
   icons:
     sheets: "google-sheets"
     docs: "google-docs"
