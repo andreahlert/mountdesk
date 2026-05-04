@@ -75,11 +75,20 @@ def main():
         # Fallback: open the parent folder in Drive
         parent = os.path.dirname(rel_path) or "/"
         url = f"https://drive.google.com/drive/folders/{drive.get('team_drive_id', '')}"
-        subprocess.Popen([config.get("settings", {}).get("chrome", "google-chrome-stable"), url])
+        browser = config.get("settings", {}).get("chrome") or find_browser()
+        subprocess.Popen([browser, url])
         return
 
     url = get_url(file_id, os.path.basename(filepath))
-    subprocess.Popen([config.get("settings", {}).get("chrome", "google-chrome-stable"), url])
+    browser = config.get("settings", {}).get("chrome") or find_browser()
+    subprocess.Popen([browser, url])
+
+
+def find_browser():
+    for browser in ["google-chrome-stable", "chromium-browser", "chromium", "firefox"]:
+        if subprocess.run(["which", browser], capture_output=True).returncode == 0:
+            return browser
+    return "xdg-open"
 
 
 if __name__ == "__main__":

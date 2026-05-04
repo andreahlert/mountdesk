@@ -17,7 +17,7 @@ Requires:       gtk3
 Requires:       libappindicator-gtk3
 Requires:       python3
 Requires:       jq
-Requires:       google-chrome-stable
+Recommends:     google-chrome-stable
 
 %description
 MountDesk integrates any cloud storage (Google Drive, OneDrive, Dropbox,
