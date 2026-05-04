@@ -46,6 +46,7 @@ install -Dm755 src/bin/mountdesk-fix-icons       %{buildroot}%{_bindir}/mountdes
 install -Dm755 src/lib/mountdesk-tray.py         %{buildroot}%{_libdir}/mountdesk/mountdesk-tray.py
 install -Dm755 src/lib/setup.sh                  %{buildroot}%{_libdir}/mountdesk/setup.sh
 install -Dm755 src/lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
+install -Dm755 src/lib/mountdesk-wizard.py    %{buildroot}%{_libdir}/mountdesk/mountdesk-wizard.py
 
 
 # Default config
@@ -54,8 +55,9 @@ install -Dm644 src/config/config.yaml            %{buildroot}%{_sysconfdir}/moun
 # Nemo extension
 install -Dm644 src/nemo/mountdesk-nemo.py        %{buildroot}%{_datadir}/nemo-python/extensions/mountdesk-nemo.py
 
-# Desktop entry
+# Desktop entries
 install -Dm644 src/desktop/mountdesk.desktop     %{buildroot}%{_datadir}/applications/mountdesk.desktop
+install -Dm644 src/desktop/mountdesk-wizard.desktop %{buildroot}%{_datadir}/applications/mountdesk-wizard.desktop
 
 # Icons
 install -Dm644 src/icons/48x48/google-sheets.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-sheets.png
@@ -91,6 +93,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_libdir}/mountdesk/
 %{_datadir}/nemo-python/extensions/mountdesk-nemo.py
 %{_datadir}/applications/mountdesk.desktop
+%{_datadir}/applications/mountdesk-wizard.desktop
 %{_datadir}/icons/hicolor/*/apps/google-sheets.png
 %{_datadir}/icons/hicolor/*/apps/google-docs.png
 %{_datadir}/icons/hicolor/*/apps/google-slides.png

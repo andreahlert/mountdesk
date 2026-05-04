@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MountDesk - Configurar Drives
+Comment=Configure Google Drive mounts without editing files
+Exec=/usr/lib/mountdesk/mountdesk-wizard.py
+Icon=mountdesk
+Type=Application
+Categories=Network;FileTransfer;
+StartupNotify=true
+Terminal=false

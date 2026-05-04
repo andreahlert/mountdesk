@@ -130,7 +130,11 @@ class MountDeskTrayApp:
         sync_item.connect("activate", self._sync_all)
         self.menu.append(sync_item)
 
-        config_item = Gtk.MenuItem(label="⚙️ Open Config")
+        wizard_item = Gtk.MenuItem(label="⚙️ Configurar Drives")
+        wizard_item.connect("activate", self._open_wizard)
+        self.menu.append(wizard_item)
+
+        config_item = Gtk.MenuItem(label="📄 Abrir Config (YAML)")
         config_item.connect("activate", self._open_config)
         self.menu.append(config_item)
 
@@ -154,6 +158,9 @@ class MountDeskTrayApp:
             active = is_service_active(svc)
             status = "🟢" if active else "🔴"
             item.set_label(f"{status} {drive['name']}")
+
+    def _open_wizard(self, widget):
+        subprocess.Popen(["/usr/bin/python3", os.path.expanduser("~/.local/lib/mountdesk/mountdesk-wizard.py")])
 
     def _open_config(self, widget):
         subprocess.Popen(["xdg-open", CONFIG_PATH])

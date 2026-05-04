@@ -145,7 +145,26 @@ echo ""
 echo "Fixing file icons..."
 ~/bin/mountdesk-fix-icons 2>/dev/null || true
 
-# 6. Start tray app
+# 6. Ensure tray service exists and start it
+TRAY_SERVICE="$HOME/.config/systemd/user/mountdesk-tray.service"
+if [[ ! -f "$TRAY_SERVICE" ]]; then
+    cat > "$TRAY_SERVICE" << 'EOF'
+[Unit]
+Description=MountDesk Tray App
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.local/lib/mountdesk/mountdesk-tray.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+EOF
+    systemctl --user daemon-reload
+fi
+
 echo ""
 echo "Starting tray app..."
 systemctl --user enable mountdesk-tray 2>/dev/null || true
