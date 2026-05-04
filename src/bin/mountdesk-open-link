@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+"""
+MountDesk - Open a file in Google Drive web from its local mount path.
+Reads drive configuration from ~/.config/mountdesk/config.yaml
+"""
+
+import os
+import sys
+import subprocess
+import yaml
+
+CONFIG_PATH = os.path.expanduser("~/.config/mountdesk/config.yaml")
+
+
+def load_config():
+    with open(CONFIG_PATH) as f:
+        return yaml.safe_load(f) or {}
+
+
+def get_drive_for_path(filepath, drives):
+    filepath = os.path.abspath(os.path.expanduser(filepath))
+    for drive in drives:
+        mountpoint = os.path.abspath(os.path.expanduser(drive['mountpoint']))
+        if filepath.startswith(mountpoint):
+            rel_path = os.path.relpath(filepath, mountpoint)
+            return drive, rel_path
+    return None, None
+
+
+def get_file_id(remote, rel_path):
+    try:
+        result = subprocess.run(
+            ["rclone", "lsjson", f"{remote}:{rel_path}"],
+            capture_output=True, text=True, check=False
+        )
+        import json
+        data = json.loads(result.stdout)
+        if data and len(data) > 0:
+            return data[0].get("ID")
+    except Exception:
+        pass
+    return None
+
+
+def get_url(file_id, filename):
+    if not file_id:
+        return None
+    if any(x in filename.lower() for x in ['sheet', 'xlsx', 'csv', 'ods']):
+        return f"https://docs.google.com/spreadsheets/d/{file_id}/edit"
+    elif any(x in filename.lower() for x in ['doc', 'docx', 'odt', 'txt']):
+        return f"https://docs.google.com/document/d/{file_id}/edit"
+    elif any(x in filename.lower() for x in ['slide', 'pptx', 'odp']):
+        return f"https://docs.google.com/presentation/d/{file_id}/edit"
+    else:
+        return f"https://drive.google.com/file/d/{file_id}/view"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print(f"Usage: {sys.argv[0]} <path-to-file>")
+        sys.exit(1)
+
+    filepath = sys.argv[1]
+    config = load_config()
+    drives = config.get("drives", [])
+
+    drive, rel_path = get_drive_for_path(filepath, drives)
+    if not drive:
+        print(f"Error: {filepath} is not inside any configured MountDesk mount.")
+        sys.exit(1)
+
+    file_id = get_file_id(drive['remote'], rel_path)
+    if not file_id:
+        print(f"Could not find Google Drive ID for {rel_path}")
+        # Fallback: open the parent folder in Drive
+        parent = os.path.dirname(rel_path) or "/"
+        url = f"https://drive.google.com/drive/folders/{drive.get('team_drive_id', '')}"
+        subprocess.Popen([config.get("settings", {}).get("chrome", "google-chrome-stable"), url])
+        return
+
+    url = get_url(file_id, os.path.basename(filepath))
+    subprocess.Popen([config.get("settings", {}).get("chrome", "google-chrome-stable"), url])
+
+
+if __name__ == "__main__":
+    main()

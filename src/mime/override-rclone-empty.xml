@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    <glob weight="100" pattern="*.xlsx"/>
+    <glob weight="100" pattern="*.XLSX"/>
+    <comment>Microsoft Excel Spreadsheet</comment>
+  </mime-type>
+  <mime-type type="application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    <glob weight="100" pattern="*.docx"/>
+    <glob weight="100" pattern="*.DOCX"/>
+    <comment>Microsoft Word Document</comment>
+  </mime-type>
+  <mime-type type="application/vnd.openxmlformats-officedocument.presentationml.presentation">
+    <glob weight="100" pattern="*.pptx"/>
+    <glob weight="100" pattern="*.PPTX"/>
+    <comment>Microsoft PowerPoint Presentation</comment>
+  </mime-type>
+  <mime-type type="application/vnd.oasis.opendocument.spreadsheet">
+    <glob weight="100" pattern="*.ods"/>
+    <glob weight="100" pattern="*.ODS"/>
+    <comment>ODF Spreadsheet</comment>
+  </mime-type>
+  <mime-type type="application/vnd.oasis.opendocument.text">
+    <glob weight="100" pattern="*.odt"/>
+    <glob weight="100" pattern="*.ODT"/>
+    <comment>ODF Text Document</comment>
+  </mime-type>
+  <mime-type type="application/pdf">
+    <glob weight="100" pattern="*.pdf"/>
+    <glob weight="100" pattern="*.PDF"/>
+    <comment>PDF Document</comment>
+  </mime-type>
+  <mime-type type="image/png">
+    <glob weight="100" pattern="*.png"/>
+    <glob weight="100" pattern="*.PNG"/>
+    <comment>PNG Image</comment>
+  </mime-type>
+  <mime-type type="image/jpeg">
+    <glob weight="100" pattern="*.jpg"/>
+    <glob weight="100" pattern="*.jpeg"/>
+    <glob weight="100" pattern="*.JPG"/>
+    <glob weight="100" pattern="*.JPEG"/>
+    <comment>JPEG Image</comment>
+  </mime-type>
+</mime-info>

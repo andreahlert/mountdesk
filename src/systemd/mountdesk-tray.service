@@ -1,0 +1,12 @@
+[Unit]
+Description=MountDesk Tray App
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/.local/lib/mountdesk/mountdesk-tray.py
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

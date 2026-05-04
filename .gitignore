@@ -1,0 +1,19 @@
+# Build artifacts
+*.rpm
+*.tar.gz
+rpmbuild/
+BUILD/
+BUILDROOT/
+RPMS/
+SRPMS/
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
