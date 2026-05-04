@@ -4,6 +4,6 @@ Comment=Mount any cloud drive to your desktop
 Exec=/usr/lib/mountdesk/mountdesk-tray.py
 Icon=mountdesk
 Type=Application
-Categories=Network;FileTransfer;Office;
+Categories=Network;FileTransfer;
 StartupNotify=false
 Terminal=false
