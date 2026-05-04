@@ -11,7 +11,7 @@
   <launchable type="desktop-id">mountdesk.desktop</launchable>
   <icon type="stock">mountdesk</icon>
   <url type="homepage">https://github.com/mountdesk/mountdesk</url>
-  <developer_name>MountDesk</developer_name>
+  <developer_name>André Ahlert Junior</developer_name>
   <project_license>MIT</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <releases>
