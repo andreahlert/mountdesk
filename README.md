@@ -73,7 +73,7 @@ mountdesk-wizard        # Or click "MountDesk - Configurar Drives" in GNOME app 
 1. Click **"Conectar ao Google Drive"**
 2. Authenticate in your browser (OAuth auto-captured — no copy-paste)
 3. Select which shared drives to mount
-4. Click **"Aplicar e Montar"**
+4. Click **"Apply and Mount"**
 
 Done. Your drives appear in `~/GoogleDrive/` and the tray app starts automatically.
 
