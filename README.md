@@ -67,10 +67,10 @@ sudo dnf install rclone nemo-python python3-pyyaml libappindicator-gtk3 \
 ### Option A: GUI Wizard (Recommended)
 
 ```bash
-mountdesk-wizard        # Or click "MountDesk - Configurar Drives" in GNOME app menu
+mountdesk-wizard        # Or click "MountDesk - Configure Drives" in GNOME app menu
 ```
 
-1. Click **"Conectar ao Google Drive"**
+1. Click **"Connect to Google Drive"**
 2. Authenticate in your browser (OAuth auto-captured — no copy-paste)
 3. Select which shared drives to mount
 4. Click **"Apply and Mount"**
@@ -166,7 +166,7 @@ Any provider supported by [rclone](https://rclone.org/):
 |---------|----------|
 | **Icons** | `.docx` → Google Docs (blue), `.xlsx` → Sheets (orange), `.pptx` → Slides (yellow) |
 | **Double-click** | Opens in Chrome app window (`--app=`) — no browser chrome |
-| **Right-click** | "Abrir no Google Drive" — opens file in browser |
+| **Right-click** | "Open in Google Drive" — opens file in browser |
 | **Local files** | Untouched — still open in LibreOffice |
 
 ## 📄 License
