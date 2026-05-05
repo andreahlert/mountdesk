@@ -1,20 +1,48 @@
-# MountDesk
+<p align="center">
+  <img src="assets/banner.png" alt="MountDesk Banner" width="100%">
+</p>
 
-[![Build RPM](https://github.com/andreahlert/mountdesk/actions/workflows/build.yml/badge.svg)](https://github.com/andreahlert/mountdesk/actions/workflows/build.yml)
+<h1 align="center">MountDesk</h1>
 
-Mount any cloud storage (Google Drive, OneDrive, Dropbox, SFTP, etc.) to your Linux desktop via [rclone](https://rclone.org/) FUSE mounts — with tray controls, file manager integration, and correct icons for Google Docs/Sheets/Slides.
+<p align="center">
+  <a href="https://github.com/andreahlert/mountdesk/actions/workflows/build.yml">
+    <img src="https://github.com/andreahlert/mountdesk/actions/workflows/build.yml/badge.svg" alt="Build RPM">
+  </a>
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
+  <img src="https://img.shields.io/badge/Fedora-43-294172?logo=fedora&logoColor=white" alt="Fedora">
+  <img src="https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/GTK-4.0-4A90D9?logo=gtk&logoColor=white" alt="GTK4">
+  <img src="https://img.shields.io/badge/rclone-1.73-3E6E7F?logo=rclone&logoColor=white" alt="rclone">
+</p>
 
-## Features
+<p align="center">
+  <b>Mount any cloud storage to your Linux desktop</b> — Google Drive, OneDrive, Dropbox, SFTP, and 70+ backends via <a href="https://rclone.org/">rclone</a> FUSE mounts.
+</p>
 
-- **Any rclone remote**: Configure any number of drives via YAML
-- **Auto-mount on login**: Systemd user services generated automatically
-- **System tray**: GTK tray app showing per-drive status and quick actions
-- **File manager integration**: Nemo extension with colored emblems and context menu
-- **Correct icons**: Google Docs/Sheets/Slides files show proper icons even when empty (rclone Google Doc exports)
-- **"Open in Cloud"**: Right-click any file to open it in Google Drive web
-- **Zero vendor lock-in**: Works with any cloud provider rclone supports (70+ backends)
+<p align="center">
+  <img src="assets/logo.png" alt="MountDesk Logo" width="128">
+</p>
 
-## Installation
+---
+
+## ✨ Features
+
+- **🖥️ Desktop App Window** — GTK4 main window showing all drives, status, and quick actions
+- **🧙 Zero-config Wizard** — GUI OAuth setup. No text files, no terminal copy-paste
+- **📁 App Mode** — Double-click Google files to open in Chrome app windows (no browser chrome)
+- **🎨 Correct Icons** — Google Docs/Sheets/Slides show proper colored icons in your file manager
+- **📂 File Manager Integration** — Nemo extension with "Open in Google Drive" context menu
+- **🔔 System Tray** — GTK tray app with per-drive status and controls
+- **⚡ Auto-mount** — Systemd user services generated and managed automatically
+- **🔓 Any rclone remote** — Works with 70+ cloud providers
+
+## 📸 Screenshots
+
+| App Window | Wizard OAuth | File Manager |
+|---|---|---|
+| *(GTK4 main window with drive list)* | *(5-step GUI: Welcome → OAuth → Select → Configure → Done)* | *(Google icons on files, app-mode on double-click)* |
+
+## 🚀 Installation
 
 ### Fedora / RHEL / CentOS Stream (RPM)
 
@@ -29,14 +57,27 @@ Or download the latest RPM from [Releases](https://github.com/andreahlert/mountd
 ### Dependencies
 
 ```bash
-sudo dnf install rclone nemo-python python3-pyyaml libappindicator-gtk3 jq google-chrome-stable
+sudo dnf install rclone nemo-python python3-pyyaml libappindicator-gtk3 \
+  python3-google-auth python3-google-auth-oauthlib python3-google-api-client \
+  jq google-chrome-stable
 ```
 
-> **Note**: `rclone` must be configured with your cloud provider(s) before running MountDesk. Run `rclone config` to set up OAuth.
+## ⚡ Quick Start
 
-## Quick Start
+### Option A: GUI Wizard (Recommended)
 
-1. **Configure your drives**:
+```bash
+mountdesk-wizard        # Or click "MountDesk - Configurar Drives" in GNOME app menu
+```
+
+1. Click **"Conectar ao Google Drive"**
+2. Authenticate in your browser (OAuth auto-captured — no copy-paste)
+3. Select which shared drives to mount
+4. Click **"Aplicar e Montar"**
+
+Done. Your drives appear in `~/GoogleDrive/` and the tray app starts automatically.
+
+### Option B: Manual YAML
 
 ```bash
 mkdir -p ~/.config/mountdesk
@@ -50,49 +91,51 @@ Example `config.yaml`:
 drives:
   - name: "Meu Drive"
     remote: "gdrive"
-    mountpoint: "~/Cloud/MeuDrive"
-
+    mountpoint: "~/GoogleDrive/MeuDrive"
   - name: "Trabalho"
     remote: "gdrive-work"
-    mountpoint: "~/Cloud/Trabalho"
-
-  - name: "Servidor SFTP"
-    remote: "sftp-server"
-    mountpoint: "~/Cloud/Servidor"
+    mountpoint: "~/GoogleDrive/Trabalho"
 
 settings:
   tray_refresh_interval: 5
-  chrome: "google-chrome-stable"
 ```
 
-2. **Run setup** (generates systemd services and starts everything):
+Then run setup:
 
 ```bash
 /usr/lib/mountdesk/setup.sh
 ```
 
-3. **Manage drives**: Edit `~/.config/mountdesk/config.yaml` and re-run `setup.sh`.
-
-## Architecture
+## 🏗️ Architecture
 
 ```
-~/.config/mountdesk/config.yaml
-         │
-         ▼
-┌─────────────────┐     ┌─────────────────┐
-│  mountdesk-tray │────▶│ systemd user    │
-│  (GTK/AppInd)   │     │ services (auto  │
-└─────────────────┘     │ generated)      │
-         │              └─────────────────┘
-         │                       │
-         ▼                       ▼
-┌─────────────────┐     ┌─────────────────┐
-│ Nemo extension  │     │ rclone mount    │
-│ (emblems/menu)  │     │ (FUSE)          │
-└─────────────────┘     └─────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                      MountDesk App                           │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │  Main Window│  │   Wizard    │  │   Tray (AppIndicator)│  │
+│  │  (GTK4)     │  │  (GTK4/Adw) │  │   (GTK3)            │  │
+│  └──────┬──────┘  └──────┬──────┘  └──────────┬──────────┘  │
+│         │                │                    │             │
+│         └────────────────┴────────────────────┘             │
+│                          │                                  │
+│                   ~/.config/mountdesk/config.yaml           │
+│                          │                                  │
+│         ┌────────────────┼────────────────┐                │
+│         ▼                ▼                ▼                │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │ setup.sh    │  │ systemd user│  │   Nemo Extension    │ │
+│  │ (services)  │  │ services    │  │   (icons + menu)    │ │
+│  └──────┬──────┘  └──────┬──────┘  └─────────────────────┘ │
+│         │                │                                  │
+│         ▼                ▼                                  │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │              rclone mount (FUSE)                     │   │
+│  │         ~/GoogleDrive/{drive}                        │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-## Building from Source
+## 🛠️ Building from Source
 
 ```bash
 git clone https://github.com/andreahlert/mountdesk.git
@@ -102,22 +145,30 @@ make rpm
 sudo dnf install ./rpmbuild/RPMS/noarch/mountdesk-*.rpm
 ```
 
-## Screenshots
-
-*(Coming soon)*
-
-## Supported Cloud Providers
+## ☁️ Supported Cloud Providers
 
 Any provider supported by [rclone](https://rclone.org/):
-- Google Drive (personal & shared drives)
-- Dropbox
-- OneDrive / SharePoint
-- Amazon S3
-- SFTP / SSH
-- WebDAV
-- Nextcloud
-- And 60+ more
 
-## License
+| Provider | Remote Type |
+|----------|-------------|
+| Google Drive (personal & shared drives) | `drive` |
+| Dropbox | `dropbox` |
+| OneDrive / SharePoint | `onedrive` |
+| Amazon S3 | `s3` |
+| SFTP / SSH | `sftp` |
+| WebDAV | `webdav` |
+| Nextcloud | `webdav` |
+| ...and 60+ more | — |
+
+## 📋 File Manager Features
+
+| Feature | Behavior |
+|---------|----------|
+| **Icons** | `.docx` → Google Docs (blue), `.xlsx` → Sheets (orange), `.pptx` → Slides (yellow) |
+| **Double-click** | Opens in Chrome app window (`--app=`) — no browser chrome |
+| **Right-click** | "Abrir no Google Drive" — opens file in browser |
+| **Local files** | Untouched — still open in LibreOffice |
+
+## 📄 License
 
 MIT — Copyright (c) 2026 André Ahlert Junior

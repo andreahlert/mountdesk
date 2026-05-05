@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4285F4;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#34A853;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FBBC05;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#grad)" filter="url(#shadow)"/>
+  
+  <!-- Cloud shape -->
+  <path d="M 168 108 
+           C 168 86, 150 70, 128 70 
+           C 112 70, 98 80, 92 94 
+           C 72 94, 56 110, 56 130 
+           C 56 152, 74 168, 96 168 
+           L 160 168 
+           C 182 168, 200 150, 200 128 
+           C 200 112, 190 100, 176 96 
+           C 174 100, 172 104, 168 108 Z" 
+        fill="white" opacity="0.95"/>
+  
+  <!-- Monitor / Desktop base -->
+  <rect x="76" y="152" width="104" height="8" rx="4" fill="white" opacity="0.9"/>
+  <rect x="100" y="160" width="56" height="6" rx="3" fill="white" opacity="0.7"/>
+  <rect x="116" y="166" width="24" height="4" rx="2" fill="white" opacity="0.5"/>
+  
+  <!-- Folder icon inside cloud -->
+  <path d="M 100 124 
+           L 100 116 
+           C 100 112, 104 110, 108 110 
+           L 124 110 
+           C 126 110, 128 112, 130 114 
+           L 132 118 
+           L 152 118 
+           C 156 118, 158 120, 158 124 
+           L 158 142 
+           C 158 146, 156 148, 152 148 
+           L 104 148 
+           C 100 148, 98 146, 98 142 
+           L 98 128 
+           C 98 126, 99 124, 100 124 Z" 
+        fill="url(#grad)" opacity="0.9"/>
+</svg>

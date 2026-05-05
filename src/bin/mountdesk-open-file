@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+"""
+MountDesk Open File — handler inteligente de duplo-clique.
+Se o arquivo está num mountpoint MountDesk → abre no Google Drive web.
+Se não → delega para o aplicativo padrão do sistema.
+"""
+
+import os
+import sys
+import subprocess
+import yaml
+import urllib.parse
+
+CONFIG_PATH = os.path.expanduser("~/.config/mountdesk/config.yaml")
+
+# Mapeamento de extensões para tipos Google
+EXT_TO_GTYPE = {
+    ".xlsx": "spreadsheets",
+    ".XLSX": "spreadsheets",
+    ".ods": "spreadsheets",
+    ".ODS": "spreadsheets",
+    ".csv": "spreadsheets",
+    ".CSV": "spreadsheets",
+    ".docx": "document",
+    ".DOCX": "document",
+    ".odt": "document",
+    ".ODT": "document",
+    ".pptx": "presentation",
+    ".PPTX": "presentation",
+    ".odp": "presentation",
+    ".ODP": "presentation",
+}
+
+
+def detect_browser():
+    """Detecta navegador. Prioriza Chrome/Chromium para modo app."""
+    for cmd in ["google-chrome-stable", "chromium-browser", "chromium"]:
+        if subprocess.run(["which", cmd], capture_output=True).returncode == 0:
+            return cmd, True
+    for cmd in ["firefox", "xdg-open"]:
+        if subprocess.run(["which", cmd], capture_output=True).returncode == 0:
+            return cmd, False
+    return "xdg-open", False
+
+
+def open_app_window(url):
+    """Abre URL em janela de app do Chrome/Chromium (sem chrome UI)."""
+    browser, supports_app = detect_browser()
+    if supports_app:
+        subprocess.Popen([browser, f"--app={url}"])
+    else:
+        subprocess.Popen([browser, url])
+
+
+def open_default(filepath):
+    """Delega para o app padrão do sistema."""
+    subprocess.Popen(["xdg-open", filepath])
+
+
+def open_in_gdrive(filepath):
+    """Abre arquivo no Google Drive via navegador em modo app."""
+    try:
+        with open(CONFIG_PATH) as f:
+            config = yaml.safe_load(f) or {}
+    except Exception:
+        open_default(filepath)
+        return
+
+    matched_remote = None
+    rel_path = None
+
+    for drive in config.get("drives", []):
+        mountpoint = os.path.expanduser(drive["mountpoint"])
+        if filepath.startswith(mountpoint):
+            matched_remote = drive["remote"]
+            rel_path = filepath[len(mountpoint):].lstrip("/")
+            break
+
+    if not matched_remote:
+        open_default(filepath)
+        return
+
+    # Tentar obter ID do arquivo via rclone lsjson
+    try:
+        result = subprocess.run(
+            ["rclone", "lsjson", f"{matched_remote}:{rel_path}"],
+            capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            import json
+            data = json.loads(result.stdout)
+            if data and len(data) > 0:
+                item = data[0]
+                fid = item.get("ID", "")
+                mime = item.get("MimeType", "")
+                if fid:
+                    if "spreadsheet" in mime:
+                        url = f"https://docs.google.com/spreadsheets/d/{fid}/edit"
+                    elif "presentation" in mime:
+                        url = f"https://docs.google.com/presentation/d/{fid}/edit"
+                    else:
+                        url = f"https://docs.google.com/document/d/{fid}/edit"
+                    open_app_window(url)
+                    return
+    except Exception:
+        pass
+
+    # Fallback: abrir pasta no Drive
+    url = "https://drive.google.com/drive/my-drive"
+    open_app_window(url)
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Uso: mountdesk-open-file <arquivo>")
+        sys.exit(1)
+
+    filepath = os.path.abspath(sys.argv[1])
+    ext = os.path.splitext(filepath)[1]
+
+    # Só intercepta arquivos Google nos mountpoints
+    if ext not in EXT_TO_GTYPE:
+        open_default(filepath)
+        return
+
+    # Verifica se está num mountpoint MountDesk
+    try:
+        with open(CONFIG_PATH) as f:
+            config = yaml.safe_load(f) or {}
+    except Exception:
+        open_default(filepath)
+        return
+
+    for drive in config.get("drives", []):
+        mountpoint = os.path.expanduser(drive["mountpoint"])
+        if filepath.startswith(mountpoint):
+            open_in_gdrive(filepath)
+            return
+
+    # Não está no mount → app padrão
+    open_default(filepath)
+
+
+if __name__ == "__main__":
+    main()
