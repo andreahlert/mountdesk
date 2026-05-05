@@ -43,7 +43,7 @@
   <!-- Right side: Text -->
   <text x="420" y="180" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="72" font-weight="800" fill="white" letter-spacing="-2">MountDesk</text>
   
-  <text x="425" y="230" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="white" opacity="0.85">Monte seus Google Drives no desktop Linux</text>
+  <text x="425" y="230" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="28" font-weight="400" fill="white" opacity="0.85">Mount your Google Drives on the Linux desktop</text>
   
   <!-- Accent line -->
   <rect x="425" y="260" width="180" height="4" rx="2" fill="url(#accent)" filter="url(#glow)"/>
