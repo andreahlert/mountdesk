@@ -83,15 +83,6 @@ install -Dm644 src/metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_meta
 # MIME override for zero-size FUSE files
 install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/packages/mountdesk.xml
 
-%post
-# User services must be enabled manually:
-# systemctl --user enable mountdesk-tray.service
-
-%preun
-# User services must be disabled manually:
-# systemctl --user disable mountdesk-tray.service
-%systemd_user_preun mountdesk-tray.service
-
 %files
 %license LICENSE
 %doc README.md
