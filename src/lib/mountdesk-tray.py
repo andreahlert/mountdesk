@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """
-MountDesk - Generic Google Drive desktop integration tray app.
-Reads drive configuration from ~/.config/mountdesk/config.yaml
+MountDesk Tray App — AppIndicator3/GTK3
+Menu: abrir drives, sync, configurar, sair
 """
 
 import os
 import sys
 import subprocess
 import yaml
-import time
-import threading
+import re
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -17,7 +16,6 @@ gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk, AppIndicator3, GObject, GLib
 
 CONFIG_PATH = os.path.expanduser("~/.config/mountdesk/config.yaml")
-SYSTEMD_USER_DIR = os.path.expanduser("~/.config/systemd/user")
 
 
 def load_config():
@@ -25,29 +23,27 @@ def load_config():
         with open(CONFIG_PATH) as f:
             return yaml.safe_load(f) or {"drives": [], "settings": {}}
     except Exception as e:
-        print(f"Failed to load config: {e}")
         return {"drives": [], "settings": {}}
 
 
-def is_service_active(service_name):
+def is_service_active(name):
     try:
-        result = subprocess.run(
-            ["systemctl", "--user", "is-active", service_name],
-            capture_output=True, text=True, check=False
-        )
-        return result.returncode == 0
+        r = subprocess.run(["systemctl", "--user", "is-active", name],
+                           capture_output=True, text=True, check=False)
+        return r.returncode == 0
     except Exception:
         return False
 
 
 def ensure_service(drive):
-    """Generate and enable systemd service for a drive if not exists."""
-    service_name = f"mountdesk-{drive['name'].lower().replace(' ', '-')}"
-    service_file = os.path.join(SYSTEMD_USER_DIR, f"{service_name}.service")
-    mountpoint = os.path.expanduser(drive['mountpoint'])
-    remote = drive['remote']
+    # systemd só aceita [a-z0-9-] em nomes de unidade
+    safe = re.sub(r'[^a-z0-9-]', '', drive["name"].lower().replace(' ', '-'))
+    svc = f"mountdesk-{safe}"
+    file_path = os.path.expanduser(f"~/.config/systemd/user/{svc}.service")
+    mountpoint = os.path.expanduser(drive["mountpoint"])
+    remote = drive["remote"]
 
-    if not os.path.exists(service_file):
+    if not os.path.exists(file_path):
         unit = f"""[Unit]
 Description=MountDesk mount - {drive['name']}
 After=network-online.target
@@ -70,13 +66,13 @@ RestartSec=10
 [Install]
 WantedBy=default.target
 """
-        os.makedirs(SYSTEMD_USER_DIR, exist_ok=True)
-        with open(service_file, 'w') as f:
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        with open(file_path, 'w') as f:
             f.write(unit)
         subprocess.run(["systemctl", "--user", "daemon-reload"], check=False)
-        subprocess.run(["systemctl", "--user", "enable", service_name], check=False)
-        subprocess.run(["systemctl", "--user", "start", service_name], check=False)
-    return service_name
+        subprocess.run(["systemctl", "--user", "enable", svc], check=False)
+        subprocess.run(["systemctl", "--user", "start", svc], check=False)
+    return svc
 
 
 class MountDeskTrayApp:
@@ -86,35 +82,32 @@ class MountDeskTrayApp:
         self.settings = self.config.get("settings", {})
 
         self.indicator = AppIndicator3.Indicator.new(
-            "mountdesk",
-            "drive-harddisk",
-            AppIndicator3.IndicatorCategory.APPLICATION_STATUS
-        )
+            "mountdesk", "drive-harddisk",
+            AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_title("MountDesk")
 
         self.menu = Gtk.Menu()
         self.indicator.set_menu(self.menu)
-
         self._build_menu()
         self._start_refresh()
 
-    def _service_name(self, drive):
-        return f"mountdesk-{drive['name'].lower().replace(' ', '-')}"
+    def _svc_name(self, drive):
+        safe = re.sub(r'[^a-z0-9-]', '', drive['name'].lower().replace(' ', '-'))
+        return f"mountdesk-{safe}"
 
     def _build_menu(self):
-        # Title
-        title_item = Gtk.MenuItem(label="MountDesk")
-        title_item.set_sensitive(False)
-        self.menu.append(title_item)
+        # Título
+        title = Gtk.MenuItem(label="MountDesk")
+        title.set_sensitive(False)
+        self.menu.append(title)
+        self.menu.append(Gtk.SeparatorMenuItem())
 
-        sep = Gtk.SeparatorMenuItem()
-        self.menu.append(sep)
-
+        # Drives
         self.drive_items = []
         for drive in self.drives:
             ensure_service(drive)
-            svc = self._service_name(drive)
+            svc = self._svc_name(drive)
             active = is_service_active(svc)
             status = "🟢" if active else "🔴"
             item = Gtk.MenuItem(label=f"{status} {drive['name']}")
@@ -122,24 +115,26 @@ class MountDeskTrayApp:
             self.menu.append(item)
             self.drive_items.append((item, drive, svc))
 
-        sep2 = Gtk.SeparatorMenuItem()
-        self.menu.append(sep2)
+        self.menu.append(Gtk.SeparatorMenuItem())
 
-        # Actions
-        sync_item = Gtk.MenuItem(label="🔄 Sync / Refresh Icons")
-        sync_item.connect("activate", self._sync_all)
-        self.menu.append(sync_item)
+        # Ações
+        sync = Gtk.MenuItem(label="🔄 Sync / Refresh Icons")
+        sync.connect("activate", self._sync_all)
+        self.menu.append(sync)
 
-        wizard_item = Gtk.MenuItem(label="⚙️ Configurar Drives")
-        wizard_item.connect("activate", self._open_wizard)
-        self.menu.append(wizard_item)
+        mainwin = Gtk.MenuItem(label="🏠 Open MountDesk")
+        mainwin.connect("activate", self._open_main)
+        self.menu.append(mainwin)
 
-        config_item = Gtk.MenuItem(label="📄 Abrir Config (YAML)")
-        config_item.connect("activate", self._open_config)
-        self.menu.append(config_item)
+        wizard = Gtk.MenuItem(label="⚙️ Configure Drives")
+        wizard.connect("activate", self._open_wizard)
+        self.menu.append(wizard)
 
-        sep3 = Gtk.SeparatorMenuItem()
-        self.menu.append(sep3)
+        config = Gtk.MenuItem(label="📄 Open Config (YAML)")
+        config.connect("activate", self._open_config)
+        self.menu.append(config)
+
+        self.menu.append(Gtk.SeparatorMenuItem())
 
         quit_item = Gtk.MenuItem(label="Quit")
         quit_item.connect("activate", self._quit)
@@ -148,19 +143,31 @@ class MountDeskTrayApp:
         self.menu.show_all()
 
     def _open_drive(self, widget, drive):
-        mountpoint = os.path.expanduser(drive['mountpoint'])
-        subprocess.Popen(["nemo", mountpoint])
+        mp = os.path.expanduser(drive['mountpoint'])
+        subprocess.Popen(["nemo", mp])
 
     def _sync_all(self, widget):
-        subprocess.Popen([os.path.expanduser("~/bin/mountdesk-fix-icons")])
-        # Refresh menu
+        fix = os.path.expanduser("~/bin/mountdesk-fix-icons")
+        if not os.path.exists(fix):
+            fix = "/usr/bin/mountdesk-fix-icons"
+        if os.path.exists(fix):
+            subprocess.Popen([fix])
         for item, drive, svc in self.drive_items:
             active = is_service_active(svc)
-            status = "🟢" if active else "🔴"
-            item.set_label(f"{status} {drive['name']}")
+            item.set_label(f"{'🟢' if active else '🔴'} {drive['name']}")
+
+    def _open_main(self, widget):
+        subprocess.Popen([
+            "/usr/bin/python3",
+            os.path.expanduser("~/.local/lib/mountdesk/mountdesk-app.py")
+        ])
 
     def _open_wizard(self, widget):
-        subprocess.Popen(["/usr/bin/python3", os.path.expanduser("~/.local/lib/mountdesk/mountdesk-wizard.py")])
+        wizard = os.path.expanduser("~/.local/lib/mountdesk/mountdesk-wizard.py")
+        if not os.path.exists(wizard):
+            wizard = "/usr/lib/mountdesk/mountdesk-wizard.py"
+        if os.path.exists(wizard):
+            subprocess.Popen(["/usr/bin/python3", wizard])
 
     def _open_config(self, widget):
         subprocess.Popen(["xdg-open", CONFIG_PATH])
@@ -175,8 +182,7 @@ class MountDeskTrayApp:
     def _refresh_status(self):
         for item, drive, svc in self.drive_items:
             active = is_service_active(svc)
-            status = "🟢" if active else "🔴"
-            item.set_label(f"{status} {drive['name']}")
+            item.set_label(f"{'🟢' if active else '🔴'} {drive['name']}")
         return True
 
 

@@ -112,7 +112,7 @@ def open_in_gdrive(filepath):
 
 def main():
     if len(sys.argv) < 2:
-        print("Uso: mountdesk-open-file <arquivo>")
+        print("Usage: mountdesk-open-file <file>")
         sys.exit(1)
 
     filepath = os.path.abspath(sys.argv[1])

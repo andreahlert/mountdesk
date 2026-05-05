@@ -96,11 +96,11 @@ class DriveRow(Gtk.Box):
         btn_box.set_margin_start(12)
         btn_box.set_margin_end(12)
 
-        open_btn = Gtk.Button(label="📂 Abrir pasta")
+        open_btn = Gtk.Button(label="📂 Open folder")
         open_btn.connect("clicked", self._on_open_folder)
         btn_box.append(open_btn)
 
-        browser_btn = Gtk.Button(label="🌐 Abrir no Drive")
+        browser_btn = Gtk.Button(label="🌐 Open in Drive")
         browser_btn.add_css_class("suggested-action")
         browser_btn.connect("clicked", self._on_open_browser)
         btn_box.append(browser_btn)
@@ -113,9 +113,9 @@ class DriveRow(Gtk.Box):
     def _update_status(self):
         active = is_service_active(svc_name(self.drive['name']))
         if active:
-            self.status_lbl.set_markup("<span color='#26a269'>🟢 Montado</span>")
+            self.status_lbl.set_markup("<span color='#26a269'>🟢 Mounted</span>")
         else:
-            self.status_lbl.set_markup("<span color='#e01b24'>🔴 Desmontado</span>")
+            self.status_lbl.set_markup("<span color='#e01b24'>🔴 Unmounted</span>")
 
     def _on_open_folder(self, btn):
         mp = os.path.expanduser(self.drive['mountpoint'])
@@ -165,11 +165,11 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         action_bar.set_margin_end(12)
         action_bar.set_halign(Gtk.Align.CENTER)
 
-        sync_btn = Gtk.Button(label="🔄 Sincronizar ícones")
+        sync_btn = Gtk.Button(label="🔄 Sync icons")
         sync_btn.connect("clicked", self._on_sync)
         action_bar.append(sync_btn)
 
-        config_btn = Gtk.Button(label="⚙️ Configurar")
+        config_btn = Gtk.Button(label="⚙️ Configure")
         config_btn.add_css_class("suggested-action")
         config_btn.connect("clicked", self._on_config)
         action_bar.append(config_btn)
@@ -197,8 +197,8 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
 
         if not drives:
             empty = Gtk.Label()
-            empty.set_markup("<span color='#888' size='large'>Nenhum drive configurado</span>\n\n"
-                           "Clique em <b>Configurar</b> para adicionar.")
+            empty.set_markup("<span color='#888' size='large'>No drives configured</span>\n\n"
+                           "Click <b>Configure</b> to add one.")
             empty.set_margin_top(48)
             empty.set_vexpand(True)
             self.list_box.append(empty)
@@ -212,7 +212,7 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         def do_sync():
             subprocess.run([os.path.expanduser("~/bin/mountdesk-fix-icons")],
                           capture_output=True, check=False)
-            GLib.idle_add(lambda: self._show_toast("Ícones sincronizados"))
+            GLib.idle_add(lambda: self._show_toast("Icons synced"))
         t = threading.Thread(target=do_sync)
         t.daemon = True
         t.start()

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Name=MountDesk
-Comment=Mount any cloud drive to your desktop
-Exec=/usr/lib/mountdesk/mountdesk-tray.py
-Icon=mountdesk
+Comment=Manage your mounted Google Drives
+Exec=/usr/bin/python3 /home/ahlert/.local/lib/mountdesk/mountdesk-app.py
 Type=Application
-Categories=Network;FileTransfer;
-StartupNotify=false
+Icon=mountdesk
+Categories=System;FileTools;
 Terminal=false
+StartupNotify=true
