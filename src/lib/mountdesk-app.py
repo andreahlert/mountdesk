@@ -220,7 +220,7 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
     def _on_config(self, btn):
         subprocess.Popen([
             "/usr/bin/python3",
-            os.path.expanduser("~/.local/lib/mountdesk/mountdesk-wizard.py")
+            "/usr/lib/mountdesk/mountdesk-wizard.py"
         ])
 
     def _show_toast(self, msg):
