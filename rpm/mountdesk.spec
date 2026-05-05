@@ -63,6 +63,8 @@ install -Dm644 src/nemo/mountdesk-nemo.py        %{buildroot}%{_datadir}/nemo-py
 # Desktop entries
 install -Dm644 src/desktop/mountdesk.desktop     %{buildroot}%{_datadir}/applications/mountdesk.desktop
 install -Dm644 src/desktop/mountdesk-wizard.desktop %{buildroot}%{_datadir}/applications/mountdesk-wizard.desktop
+sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}%{_datadir}/applications/mountdesk.desktop
+sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}%{_datadir}/applications/mountdesk-wizard.desktop
 
 # Icons
 install -Dm644 src/icons/48x48/google-sheets.png   %{buildroot}%{_datadir}/icons/hicolor/48x48/apps/google-sheets.png
