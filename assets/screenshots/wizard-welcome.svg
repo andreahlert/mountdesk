@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 520" width="650" height="520">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8f9fa"/>
+      <stop offset="100%" stop-color="#e8f0fe"/>
+    </linearGradient>
+    <linearGradient id="btn" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1a73e8"/>
+      <stop offset="100%" stop-color="#0d47a1"/>
+    </linearGradient>
+    <filter id="shd" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+
+  <!-- Window -->
+  <rect width="650" height="520" rx="12" fill="white" filter="url(#shd)"/>
+  <rect width="650" height="520" rx="12" fill="url(#bg)"/>
+
+  <!-- Logo circle -->
+  <circle cx="325" cy="140" r="50" fill="url(#btn)"/>
+  <text x="325" y="155" font-family="sans-serif" font-size="40" text-anchor="middle" fill="white">☁️</text>
+
+  <!-- Title -->
+  <text x="325" y="240" font-family="-apple-system, sans-serif" font-size="32" font-weight="800" text-anchor="middle" fill="#1a1a1a">MountDesk</text>
+  <text x="325" y="275" font-family="-apple-system, sans-serif" font-size="15" text-anchor="middle" fill="#555">Mount your Google Drives on the desktop</text>
+  <text x="325" y="300" font-family="-apple-system, sans-serif" font-size="15" text-anchor="middle" fill="#555">without editing any files.</text>
+
+  <!-- Features -->
+  <text x="325" y="350" font-family="-apple-system, sans-serif" font-size="14" text-anchor="middle" fill="#666" line-height="1.8">
+    <tspan x="325" dy="0">• One-click Google login</tspan>
+    <tspan x="325" dy="28">• Select drives on screen</tspan>
+    <tspan x="325" dy="28">• Auto-configures mounts</tspan>
+    <tspan x="325" dy="28">• Google icons in file manager</tspan>
+  </text>
+
+  <!-- Button -->
+  <rect x="225" y="440" width="200" height="44" rx="22" fill="url(#btn)"/>
+  <text x="325" y="468" font-family="-apple-system, sans-serif" font-size="15" font-weight="600" text-anchor="middle" fill="white">Connect to Google Drive</text>
+
+  <!-- Step dots -->
+  <circle cx="290" cy="510" r="8" fill="#1a73e8"/>
+  <circle cx="314" cy="510" r="8" fill="#d0d0d0"/>
+  <circle cx="338" cy="510" r="8" fill="#d0d0d0"/>
+  <circle cx="362" cy="510" r="8" fill="#d0d0d0"/>
+  <circle cx="386" cy="510" r="8" fill="#d0d0d0"/>
+</svg>

@@ -39,17 +39,17 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/app-window.png" alt="MountDesk App Window" width="520">
+  <img src="assets/screenshots/app-window.svg" alt="MountDesk App Window" width="520">
 </p>
 <p align="center"><b>Main window</b> — drive list, status, and quick actions</p>
 
 <p align="center">
-  <img src="assets/screenshots/wizard-welcome.png" alt="MountDesk Wizard" width="650">
+  <img src="assets/screenshots/wizard-welcome.svg" alt="MountDesk Wizard" width="650">
 </p>
 <p align="center"><b>Setup wizard</b> — OAuth GUI, no terminal, no text editing</p>
 
 <p align="center">
-  <img src="assets/screenshots/file-manager.png" alt="File Manager with Google Icons" width="900">
+  <img src="assets/screenshots/file-manager.svg" alt="File Manager with Google Icons" width="900">
 </p>
 <p align="center"><b>File manager</b> — Google Docs/Sheets/Slides icons, app-mode on double-click</p>
 
