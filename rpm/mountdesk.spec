@@ -75,7 +75,7 @@ install -Dm644 src/icons/256x256/mountdesk.png     %{buildroot}%{_datadir}/icons
 install -Dm644 src/icons/scalable/mountdesk.svg    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
 
 # Systemd user service (tray only - mounts are generated dynamically)
-install -Dm644 src/systemd/mountdesk-tray.service  %{buildroot}%{_userunitdir}/mountdesk-tray.service
+install -Dm644 src/systemd/mountdesk-tray.service  %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
 
 # AppData / Metainfo
 install -Dm644 src/metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_metainfodir}/com.mountdesk.drive.metainfo.xml
@@ -105,7 +105,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_datadir}/icons/hicolor/*/apps/google-slides.png
 %{_datadir}/icons/hicolor/256x256/apps/mountdesk.png
 %{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
-%{_userunitdir}/mountdesk-tray.service
+/usr/lib/systemd/user/mountdesk-tray.service
 %{_metainfodir}/com.mountdesk.drive.metainfo.xml
 %{_datadir}/mime/packages/mountdesk.xml
 
