@@ -13,6 +13,9 @@ Requires:       nemo-python
 Requires:       python3-gobject
 Requires:       python3-gobject-base
 Requires:       python3-pyyaml
+Requires:       python3-google-auth
+Requires:       python3-google-auth-oauthlib
+Requires:       python3-google-api-client
 Requires:       gtk3
 Requires:       libappindicator-gtk3
 Requires:       python3
@@ -41,12 +44,14 @@ Features:
 # Scripts
 install -Dm755 src/bin/mountdesk-open-link       %{buildroot}%{_bindir}/mountdesk-open-link
 install -Dm755 src/bin/mountdesk-fix-icons       %{buildroot}%{_bindir}/mountdesk-fix-icons
+install -Dm755 src/bin/mountdesk-open-file       %{buildroot}%{_bindir}/mountdesk-open-file
 
 # Tray app and helpers
 install -Dm755 src/lib/mountdesk-tray.py         %{buildroot}%{_libdir}/mountdesk/mountdesk-tray.py
 install -Dm755 src/lib/setup.sh                  %{buildroot}%{_libdir}/mountdesk/setup.sh
 install -Dm755 src/lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
 install -Dm755 src/lib/mountdesk-wizard.py    %{buildroot}%{_libdir}/mountdesk/mountdesk-wizard.py
+install -Dm755 src/lib/mountdesk-app.py       %{buildroot}%{_libdir}/mountdesk/mountdesk-app.py
 
 
 # Default config
@@ -90,6 +95,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %config(noreplace) %{_sysconfdir}/mountdesk/config.yaml.example
 %{_bindir}/mountdesk-open-link
 %{_bindir}/mountdesk-fix-icons
+%{_bindir}/mountdesk-open-file
 %{_libdir}/mountdesk/
 %{_datadir}/nemo-python/extensions/mountdesk-nemo.py
 %{_datadir}/applications/mountdesk.desktop
@@ -104,7 +110,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_datadir}/mime/packages/mountdesk.xml
 
 %changelog
-* Sun May 04 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.0-1
+* Mon May 04 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.0-1
 - Generic cloud drive desktop integration
 - YAML-configurable drives
 - Automatic systemd service generation

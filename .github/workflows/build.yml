@@ -23,8 +23,13 @@ jobs:
         mkdir -p ~/rpmbuild/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
         cp rpm/mountdesk.spec ~/rpmbuild/SPECS/
         cd ~/rpmbuild/SPECS
-        # Create source tarball from src/
-        tar czf ~/rpmbuild/SOURCES/mountdesk-$(grep '^Version:' mountdesk.spec | awk '{print $2}').tar.gz -C ${{ github.workspace }} src rpm LICENSE README.md
+        # Create source tarball with proper root directory for %autosetup
+        VERSION=$(grep '^Version:' mountdesk.spec | awk '{print $2}')
+        TMPDIR=$(mktemp -d)
+        mkdir -p "$TMPDIR/mountdesk-$VERSION"
+        cp -r ${{ github.workspace }}/src ${{ github.workspace }}/rpm ${{ github.workspace }}/LICENSE ${{ github.workspace }}/README.md ${{ github.workspace }}/assets "$TMPDIR/mountdesk-$VERSION/"
+        tar czf ~/rpmbuild/SOURCES/mountdesk-${VERSION}.tar.gz -C "$TMPDIR" "mountdesk-$VERSION"
+        rm -rf "$TMPDIR"
         rpmbuild -ba mountdesk.spec
 
     - name: Lint RPM
