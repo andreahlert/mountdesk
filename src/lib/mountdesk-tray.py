@@ -82,7 +82,7 @@ class MountDeskTrayApp:
         self.settings = self.config.get("settings", {})
 
         self.indicator = AppIndicator3.Indicator.new(
-            "mountdesk", "drive-harddisk",
+            "mountdesk", "mountdesk",
             AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         self.indicator.set_title("MountDesk")

@@ -16,7 +16,7 @@ gi.require_version('Adw', '1')
 from gi.repository import Gtk, Adw, GLib, Gio
 
 CONFIG_PATH = os.path.expanduser("~/.config/mountdesk/config.yaml")
-MOUNTDESK_ICON = "drive-harddisk"
+MOUNTDESK_ICON = "mountdesk"
 
 
 def load_config():

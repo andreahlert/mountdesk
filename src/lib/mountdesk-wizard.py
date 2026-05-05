@@ -82,7 +82,7 @@ class WizardWindow(Adw.ApplicationWindow):
         box.set_margin_start(48); box.set_margin_end(48)
         box.set_valign(Gtk.Align.CENTER)
 
-        img = Gtk.Image.new_from_icon_name("drive-harddisk")
+        img = Gtk.Image.new_from_icon_name("mountdesk")
         img.set_pixel_size(96)
         box.append(img)
 
