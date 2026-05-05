@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 MountDesk Desktop App — Janela principal GTK4
 Lista drives, status, ações. Integra com tray app.
@@ -128,6 +128,62 @@ class DriveRow(Gtk.Box):
         ])
 
 
+def build_onboarding_page(app_window):
+    """Build the first-run welcome screen (Adw.StatusPage is final, so we compose)."""
+
+    page = Adw.StatusPage()
+    page.set_icon_name(MOUNTDESK_ICON)
+    page.set_title("Welcome to MountDesk")
+    page.set_description(
+        "Mount your Google Drives directly on the desktop. "
+        "One-click setup, no manual config files needed."
+    )
+    page.set_hexpand(True)
+    page.set_vexpand(True)
+
+    # Feature list
+    feats = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+    feats.set_margin_top(20)
+    feats.set_halign(Gtk.Align.CENTER)
+
+    for icon, text in [
+        ("preferences-system-symbolic", "One-click Google login"),
+        ("drive-harddisk-symbolic",   "Select which drives to mount"),
+        ("emblem-synchronized-symbolic", "Auto-mount on login"),
+        ("folder-visiting-symbolic",  "Google icons in file manager"),
+    ]:
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
+        row.set_halign(Gtk.Align.START)
+
+        img = Gtk.Image.new_from_icon_name(icon)
+        img.set_pixel_size(18)
+        row.append(img)
+
+        lbl = Gtk.Label(label=text)
+        lbl.set_halign(Gtk.Align.START)
+        row.append(lbl)
+
+        feats.append(row)
+
+    # CTA button
+    cta = Gtk.Button(label="Get Started")
+    cta.add_css_class("suggested-action")
+    cta.add_css_class("pill")
+    cta.set_margin_top(28)
+    cta.set_halign(Gtk.Align.CENTER)
+    cta.connect("clicked", lambda btn: app_window._on_config(btn))
+
+    # Compose into a vertical box centered
+    content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+    content.set_halign(Gtk.Align.CENTER)
+    content.set_valign(Gtk.Align.CENTER)
+    content.append(feats)
+    content.append(cta)
+
+    page.set_child(content)
+    return page
+
+
 class MountDeskMainWindow(Adw.ApplicationWindow):
     def __init__(self, app):
         super().__init__(application=app)
@@ -142,11 +198,15 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         menu_btn.set_icon_name("open-menu-symbolic")
         header.pack_end(menu_btn)
 
-        # Content
-        self.content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.content.append(header)
+        # Content stack: onboarding vs drive list
+        self.stack = Gtk.Stack()
+        self.stack.set_transition_type(Gtk.StackTransitionType.CROSSFADE)
 
-        # Scrollable list
+        # Onboarding page (shown when no drives)
+        self.onboarding = build_onboarding_page(self)
+        self.stack.add_named(self.onboarding, "onboarding")
+
+        # Drive list page
         scroll = Gtk.ScrolledWindow()
         scroll.set_vexpand(True)
 
@@ -155,7 +215,7 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         self.list_box.add_css_class("boxed-list")
 
         scroll.set_child(self.list_box)
-        self.content.append(scroll)
+        self.stack.add_named(scroll, "drives")
 
         # Bottom action bar
         action_bar = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=12)
@@ -178,9 +238,13 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         quit_btn.connect("clicked", lambda _: self.close())
         action_bar.append(quit_btn)
 
-        self.content.append(action_bar)
+        # Root layout
+        root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        root.append(header)
+        root.append(self.stack)
+        root.append(action_bar)
 
-        self.set_content(self.content)
+        self.set_content(root)
         self._build_drive_list()
         self._start_refresh()
 
@@ -196,14 +260,10 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         drives = config.get("drives", [])
 
         if not drives:
-            empty = Gtk.Label()
-            empty.set_markup("<span color='#888' size='large'>No drives configured</span>\n\n"
-                           "Click <b>Configure</b> to add one.")
-            empty.set_margin_top(48)
-            empty.set_vexpand(True)
-            self.list_box.append(empty)
+            self.stack.set_visible_child_name("onboarding")
             return
 
+        self.stack.set_visible_child_name("drives")
         for drive in drives:
             row_widget = DriveRow(drive, self)
             self.list_box.append(row_widget)
@@ -224,7 +284,6 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         ])
 
     def _show_toast(self, msg):
-        # Simple toast via dialog
         dialog = Adw.MessageDialog.new(self, None, msg)
         dialog.add_response("ok", "OK")
         dialog.present()
@@ -233,7 +292,6 @@ class MountDeskMainWindow(Adw.ApplicationWindow):
         GLib.timeout_add_seconds(5, self._refresh_status)
 
     def _refresh_status(self):
-        # Rebuild to refresh status (simple approach)
         self._build_drive_list()
         return True
 
