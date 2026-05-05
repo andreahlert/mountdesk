@@ -1,72 +1,117 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 460" width="520" height="460">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" width="640" height="420">
   <defs>
-    <linearGradient id="hdr" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#1a73e8"/>
-      <stop offset="100%" stop-color="#0d47a1"/>
-    </linearGradient>
-    <filter id="shd" x="-5%" y="-5%" width="110%" height="120%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+    <filter id="shd" x="-3%" y="-3%" width="106%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.12"/>
     </filter>
-    <clipPath id="win"><rect width="520" height="460" rx="12"/></clipPath>
+    <linearGradient id="hdr" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e4e1de"/>
+      <stop offset="100%" stop-color="#dad6d2"/>
+    </linearGradient>
   </defs>
 
-  <!-- Window -->
-  <rect width="520" height="460" rx="12" fill="white" filter="url(#shd)"/>
+  <!-- Window shadow + frame -->
+  <rect width="640" height="420" rx="12" fill="white" filter="url(#shd)"/>
 
-  <!-- Header Bar -->
-  <rect width="520" height="56" fill="url(#hdr)"/>
-  <rect x="16" y="14" width="28" height="28" rx="7" fill="white" opacity="0.95"/>
-  <text x="54" y="35" font-family="-apple-system, sans-serif" font-size="16" font-weight="700" fill="white">MountDesk</text>
-
-  <!-- Drive 1: My Drive -->
-  <g transform="translate(20,76)">
-    <rect width="480" height="88" rx="10" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
-    <rect x="16" y="16" width="40" height="40" rx="10" fill="url(#hdr)" opacity="0.9"/>
-    <text x="28" y="42" font-family="sans-serif" font-size="20">📁</text>
-    <text x="70" y="30" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">My Drive</text>
-    <text x="70" y="48" font-family="sans-serif" font-size="11" fill="#888">~/Cloud/MyDrive</text>
-    <text x="400" y="30" font-family="sans-serif" font-size="12" font-weight="600" fill="#34a853">🟢 Mounted</text>
-    <rect x="280" y="52" width="90" height="28" rx="6" fill="white" stroke="#ddd"/>
-    <text x="325" y="70" font-family="sans-serif" font-size="11" fill="#333" text-anchor="middle">📂 Open folder</text>
-    <rect x="380" y="52" width="90" height="28" rx="6" fill="#1a73e8"/>
-    <text x="425" y="70" font-family="sans-serif" font-size="11" fill="white" text-anchor="middle">🌐 Open in Drive</text>
+  <!-- Header bar -->
+  <rect width="640" height="46" rx="12" fill="url(#hdr)"/>
+  <rect y="23" width="640" height="23" fill="url(#hdr)"/>
+  
+  <!-- Menu hamburger (left side) -->
+  <g transform="translate(16, 17)">
+    <rect x="0" y="0" width="20" height="12" rx="2" fill="none"/>
+    <line x1="2" y1="3" x2="18" y2="3" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="2" y1="6" x2="18" y2="6" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="2" y1="9" x2="18" y2="9" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="320" y="28" font-family="Cantarell, Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#2e2e2e">MountDesk</text>
+  
+  <!-- Window controls (right side) -->
+  <g transform="translate(562, 15)">
+    <!-- Minimize -->
+    <rect x="0" y="0" width="16" height="16" rx="3" fill="none"/>
+    <line x1="3" y1="8" x2="13" y2="8" stroke="#555" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Maximize -->
+    <rect x="20" y="0" width="16" height="16" rx="3" fill="none"/>
+    <rect x="23" y="3" width="10" height="10" rx="1" fill="none" stroke="#555" stroke-width="1.5"/>
+    <!-- Close -->
+    <rect x="40" y="0" width="16" height="16" rx="3" fill="none"/>
+    <line x1="4" y1="4" x2="12" y2="12" stroke="#555" stroke-width="1.5" stroke-linecap="round" transform="translate(40, 0)"/>
+    <line x1="4" y1="12" x2="12" y2="4" stroke="#555" stroke-width="1.5" stroke-linecap="round" transform="translate(40, 0)"/>
   </g>
 
-  <!-- Drive 2: Work -->
-  <g transform="translate(20,176)">
-    <rect width="480" height="88" rx="10" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
-    <rect x="16" y="16" width="40" height="40" rx="10" fill="url(#hdr)" opacity="0.9"/>
-    <text x="28" y="42" font-family="sans-serif" font-size="20">📁</text>
-    <text x="70" y="30" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Work</text>
-    <text x="70" y="48" font-family="sans-serif" font-size="11" fill="#888">~/Cloud/Work</text>
-    <text x="400" y="30" font-family="sans-serif" font-size="12" font-weight="600" fill="#34a853">🟢 Mounted</text>
-    <rect x="280" y="52" width="90" height="28" rx="6" fill="white" stroke="#ddd"/>
-    <text x="325" y="70" font-family="sans-serif" font-size="11" fill="#333" text-anchor="middle">📂 Open folder</text>
-    <rect x="380" y="52" width="90" height="28" rx="6" fill="#1a73e8"/>
-    <text x="425" y="70" font-family="sans-serif" font-size="11" fill="white" text-anchor="middle">🌐 Open in Drive</text>
+  <!-- Drive Card 1: CONTROLADORIA -->
+  <g transform="translate(16, 58)">
+    <rect width="608" height="96" rx="10" fill="#fafafa" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <!-- Folder icon (Adwaita style) -->
+    <g transform="translate(16, 20)">
+      <path d="M 2 8 L 2 44 L 50 44 L 50 12 L 28 12 L 22 4 L 10 4 L 10 8 Z" fill="#99c1f1" stroke="#62a0ea" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 2 16 L 50 16 L 50 44 L 2 44 Z" fill="#c5e5ff" stroke="none"/>
+    </g>
+    
+    <!-- Drive name -->
+    <text x="76" y="38" font-family="Cantarell, Inter, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">CONTROLADORIA</text>
+    <!-- Mount path -->
+    <text x="76" y="56" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#888">~/GoogleDrive/CONTROLADORIA</text>
+    
+    <!-- Status: Mounted -->
+    <circle cx="540" cy="28" r="5" fill="#34a853"/>
+    <text x="554" y="32" font-family="Cantarell, Inter, sans-serif" font-size="12" font-weight="600" fill="#34a853">Mounted</text>
+    
+    <!-- Open folder button -->
+    <rect x="380" y="58" width="100" height="28" rx="6" fill="#f0f0f0" stroke="#d0d0d0" stroke-width="1"/>
+    <text x="430" y="76" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#333" text-anchor="middle">📂 Open folder</text>
+    
+    <!-- Open in Drive button -->
+    <rect x="490" y="58" width="100" height="28" rx="6" fill="#1a73e8"/>
+    <text x="540" y="76" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="white" text-anchor="middle">🌐 Open in Drive</text>
   </g>
 
-  <!-- Drive 3: Photos (unmounted) -->
-  <g transform="translate(20,276)">
-    <rect width="480" height="88" rx="10" fill="#fafafa" stroke="#e8e8e8" stroke-width="1"/>
-    <rect x="16" y="16" width="40" height="40" rx="10" fill="#999" opacity="0.5"/>
-    <text x="28" y="42" font-family="sans-serif" font-size="20">📁</text>
-    <text x="70" y="30" font-family="sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Photos</text>
-    <text x="70" y="48" font-family="sans-serif" font-size="11" fill="#888">~/Cloud/Photos</text>
-    <text x="400" y="30" font-family="sans-serif" font-size="12" font-weight="600" fill="#e01b24">🔴 Unmounted</text>
-    <rect x="280" y="52" width="90" height="28" rx="6" fill="white" stroke="#ddd"/>
-    <text x="325" y="70" font-family="sans-serif" font-size="11" fill="#333" text-anchor="middle">📂 Open folder</text>
-    <rect x="380" y="52" width="90" height="28" rx="6" fill="#1a73e8"/>
-    <text x="425" y="70" font-family="sans-serif" font-size="11" fill="white" text-anchor="middle">🌐 Open in Drive</text>
+  <!-- Drive Card 2: Meu Drive -->
+  <g transform="translate(16, 166)">
+    <rect width="608" height="96" rx="10" fill="#fafafa" stroke="#e0e0e0" stroke-width="1"/>
+    
+    <!-- Folder icon -->
+    <g transform="translate(16, 20)">
+      <path d="M 2 8 L 2 44 L 50 44 L 50 12 L 28 12 L 22 4 L 10 4 L 10 8 Z" fill="#99c1f1" stroke="#62a0ea" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M 2 16 L 50 16 L 50 44 L 2 44 Z" fill="#c5e5ff" stroke="none"/>
+    </g>
+    
+    <!-- Drive name -->
+    <text x="76" y="38" font-family="Cantarell, Inter, sans-serif" font-size="14" font-weight="700" fill="#1a1a1a">Meu Drive</text>
+    <!-- Mount path -->
+    <text x="76" y="56" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#888">~/GoogleDrive/MeuDrive</text>
+    
+    <!-- Status: Mounted -->
+    <circle cx="540" cy="28" r="5" fill="#34a853"/>
+    <text x="554" y="32" font-family="Cantarell, Inter, sans-serif" font-size="12" font-weight="600" fill="#34a853">Mounted</text>
+    
+    <!-- Open folder button -->
+    <rect x="380" y="58" width="100" height="28" rx="6" fill="#f0f0f0" stroke="#d0d0d0" stroke-width="1"/>
+    <text x="430" y="76" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#333" text-anchor="middle">📂 Open folder</text>
+    
+    <!-- Open in Drive button -->
+    <rect x="490" y="58" width="100" height="28" rx="6" fill="#1a73e8"/>
+    <text x="540" y="76" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="white" text-anchor="middle">🌐 Open in Drive</text>
   </g>
 
-  <!-- Bottom actions -->
-  <g transform="translate(0,390)">
-    <rect x="20" y="0" width="110" height="34" rx="17" fill="white" stroke="#ddd" stroke-width="1"/>
-    <text x="75" y="22" font-family="sans-serif" font-size="12" fill="#333" text-anchor="middle">🔄 Sync icons</text>
-    <rect x="145" y="0" width="110" height="34" rx="17" fill="#1a73e8"/>
-    <text x="200" y="22" font-family="sans-serif" font-size="12" fill="white" text-anchor="middle">⚙️ Configure</text>
-    <rect x="270" y="0" width="80" height="34" rx="17" fill="white" stroke="#ddd" stroke-width="1"/>
-    <text x="310" y="22" font-family="sans-serif" font-size="12" fill="#333" text-anchor="middle">Quit</text>
+  <!-- Bottom action bar -->
+  <g transform="translate(0, 380)">
+    <rect x="0" y="0" width="640" height="40" fill="#f6f5f4"/>
+    <line x1="0" y1="0" x2="640" y2="0" stroke="#d0d0d0" stroke-width="1"/>
+    
+    <!-- Sync icons button -->
+    <rect x="16" y="8" width="100" height="24" rx="6" fill="white" stroke="#c0c0c0" stroke-width="1"/>
+    <text x="66" y="23" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#333" text-anchor="middle">🔄 Sync icons</text>
+    
+    <!-- Configure button -->
+    <rect x="128" y="8" width="90" height="24" rx="6" fill="#1a73e8"/>
+    <text x="173" y="23" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="white" text-anchor="middle">⚙️ Configure</text>
+    
+    <!-- Quit button -->
+    <rect x="230" y="8" width="60" height="24" rx="6" fill="white" stroke="#c0c0c0" stroke-width="1"/>
+    <text x="260" y="23" font-family="Cantarell, Inter, sans-serif" font-size="11" fill="#333" text-anchor="middle">Quit</text>
   </g>
 </svg>

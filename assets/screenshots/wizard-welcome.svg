@@ -1,47 +1,71 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 520" width="650" height="520">
   <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#f8f9fa"/>
-      <stop offset="100%" stop-color="#e8f0fe"/>
-    </linearGradient>
-    <linearGradient id="btn" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#1a73e8"/>
-      <stop offset="100%" stop-color="#0d47a1"/>
-    </linearGradient>
-    <filter id="shd" x="-5%" y="-5%" width="110%" height="120%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.1"/>
+    <filter id="shd" x="-3%" y="-3%" width="106%" height="110%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#000" flood-opacity="0.12"/>
     </filter>
   </defs>
 
-  <!-- Window -->
+  <!-- Window shadow + frame -->
   <rect width="650" height="520" rx="12" fill="white" filter="url(#shd)"/>
-  <rect width="650" height="520" rx="12" fill="url(#bg)"/>
-
-  <!-- Logo circle -->
-  <circle cx="325" cy="140" r="50" fill="url(#btn)"/>
-  <text x="325" y="155" font-family="sans-serif" font-size="40" text-anchor="middle" fill="white">☁️</text>
-
+  
+  <!-- Background -->
+  <rect width="650" height="520" rx="12" fill="#f6f5f4"/>
+  
+  <!-- Header bar -->
+  <rect width="650" height="46" rx="12" fill="#e4e1de"/>
+  <rect y="23" width="650" height="23" fill="#e4e1de"/>
+  
+  <!-- Window controls (left, GNOME style) -->
+  <circle cx="22" cy="23" r="6" fill="#ff5f57" opacity="0.85"/>
+  <circle cx="42" cy="23" r="6" fill="#febc2e" opacity="0.85"/>
+  <circle cx="62" cy="23" r="6" fill="#28c840" opacity="0.85"/>
+  
   <!-- Title -->
-  <text x="325" y="240" font-family="-apple-system, sans-serif" font-size="32" font-weight="800" text-anchor="middle" fill="#1a1a1a">MountDesk</text>
-  <text x="325" y="275" font-family="-apple-system, sans-serif" font-size="15" text-anchor="middle" fill="#555">Mount your Google Drives on the desktop</text>
-  <text x="325" y="300" font-family="-apple-system, sans-serif" font-size="15" text-anchor="middle" fill="#555">without editing any files.</text>
+  <text x="325" y="28" font-family="Cantarell, Inter, sans-serif" font-size="14" font-weight="700" text-anchor="middle" fill="#2e2e2e">MountDesk</text>
 
-  <!-- Features -->
-  <text x="325" y="350" font-family="-apple-system, sans-serif" font-size="14" text-anchor="middle" fill="#666" line-height="1.8">
-    <tspan x="325" dy="0">• One-click Google login</tspan>
-    <tspan x="325" dy="28">• Select drives on screen</tspan>
-    <tspan x="325" dy="28">• Auto-configures mounts</tspan>
-    <tspan x="325" dy="28">• Google icons in file manager</tspan>
-  </text>
+  <!-- Content area -->
+  <g transform="translate(0, 46)">
+    <!-- App icon: MountDesk logo (hard disk / drive icon style) -->
+    <g transform="translate(275, 50)">
+      <!-- Drive icon -->
+      <rect x="10" y="0" width="80" height="100" rx="8" fill="#e8e8e8" stroke="#b0b0b0" stroke-width="2"/>
+      <rect x="14" y="4" width="72" height="76" rx="4" fill="#f5f5f5"/>
+      <!-- Drive platter -->
+      <circle cx="50" cy="42" r="28" fill="#ddd" stroke="#bbb" stroke-width="1"/>
+      <circle cx="50" cy="42" r="8" fill="#aaa"/>
+      <circle cx="50" cy="42" r="3" fill="#666"/>
+      <!-- Read/write arm -->
+      <line x1="50" y1="42" x2="68" y2="20" stroke="#999" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="68" cy="20" r="4" fill="#888"/>
+      <!-- Bottom connector -->
+      <rect x="24" y="88" width="52" height="8" rx="2" fill="#c0c0c0"/>
+    </g>
 
-  <!-- Button -->
-  <rect x="225" y="440" width="200" height="44" rx="22" fill="url(#btn)"/>
-  <text x="325" y="468" font-family="-apple-system, sans-serif" font-size="15" font-weight="600" text-anchor="middle" fill="white">Connect to Google Drive</text>
+    <!-- Title -->
+    <text x="325" y="210" font-family="Cantarell, Inter, sans-serif" font-size="28" font-weight="800" text-anchor="middle" fill="#1a1a1a">MountDesk</text>
+    
+    <!-- Subtitle -->
+    <text x="325" y="245" font-family="Cantarell, Inter, sans-serif" font-size="14" text-anchor="middle" fill="#555">Mount your Google Drives on the desktop</text>
+    <text x="325" y="265" font-family="Cantarell, Inter, sans-serif" font-size="14" text-anchor="middle" fill="#555">without editing any files.</text>
 
-  <!-- Step dots -->
-  <circle cx="290" cy="510" r="8" fill="#1a73e8"/>
-  <circle cx="314" cy="510" r="8" fill="#d0d0d0"/>
-  <circle cx="338" cy="510" r="8" fill="#d0d0d0"/>
-  <circle cx="362" cy="510" r="8" fill="#d0d0d0"/>
-  <circle cx="386" cy="510" r="8" fill="#d0d0d0"/>
+    <!-- Features list -->
+    <g transform="translate(325, 310)" text-anchor="middle">
+      <text x="0" y="0" font-family="Cantarell, Inter, sans-serif" font-size="13" fill="#666">
+        <tspan x="0" dy="0">• One-click Google login</tspan>
+      </text>
+      <text x="0" y="28" font-family="Cantarell, Inter, sans-serif" font-size="13" fill="#666">
+        <tspan x="0" dy="0">• Select drives on screen</tspan>
+      </text>
+      <text x="0" y="56" font-family="Cantarell, Inter, sans-serif" font-size="13" fill="#666">
+        <tspan x="0" dy="0">• Auto-configures mounts</tspan>
+      </text>
+      <text x="0" y="84" font-family="Cantarell, Inter, sans-serif" font-size="13" fill="#666">
+        <tspan x="0" dy="0">• Google icons in file manager</tspan>
+      </text>
+    </g>
+
+    <!-- Connect button -->
+    <rect x="225" y="440" width="200" height="42" rx="21" fill="#1a73e8"/>
+    <text x="325" y="466" font-family="Cantarell, Inter, sans-serif" font-size="14" font-weight="600" text-anchor="middle" fill="white">Connect to Google Drive</text>
+  </g>
 </svg>
