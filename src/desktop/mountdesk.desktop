@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=MountDesk
 Comment=Manage your mounted Google Drives
-Exec=/usr/bin/python3 /home/ahlert/.local/lib/mountdesk/mountdesk-app.py
+Exec=/usr/bin/python3 /usr/lib/mountdesk/mountdesk-app.py
 Type=Application
 Icon=mountdesk
 Categories=System;FileTools;

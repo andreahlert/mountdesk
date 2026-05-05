@@ -1,8 +1,9 @@
 [Desktop Entry]
 Name=MountDesk - Configure Drives
 Comment=Configure cloud drives without editing text
-Exec=/usr/bin/python3 /home/ahlert/.local/lib/mountdesk/mountdesk-wizard.py
+Exec=/usr/bin/python3 /usr/lib/mountdesk/mountdesk-wizard.py
 Type=Application
 Icon=mountdesk
 Categories=System;Settings;
 Terminal=false
+NoDisplay=true
