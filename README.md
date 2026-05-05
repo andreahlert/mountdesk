@@ -38,9 +38,20 @@
 
 ## 📸 Screenshots
 
-| App Window | Wizard OAuth | File Manager |
-|---|---|---|
-| *(GTK4 main window with drive list)* | *(5-step GUI: Welcome → OAuth → Select → Configure → Done)* | *(Google icons on files, app-mode on double-click)* |
+<p align="center">
+  <img src="assets/screenshots/app-window.png" alt="MountDesk App Window" width="520">
+</p>
+<p align="center"><b>Main window</b> — drive list, status, and quick actions</p>
+
+<p align="center">
+  <img src="assets/screenshots/wizard-welcome.png" alt="MountDesk Wizard" width="650">
+</p>
+<p align="center"><b>Setup wizard</b> — OAuth GUI, no terminal, no text editing</p>
+
+<p align="center">
+  <img src="assets/screenshots/file-manager.png" alt="File Manager with Google Icons" width="900">
+</p>
+<p align="center"><b>File manager</b> — Google Docs/Sheets/Slides icons, app-mode on double-click</p>
 
 ## 🚀 Installation
 
