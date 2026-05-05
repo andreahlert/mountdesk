@@ -8,6 +8,9 @@
   <a href="https://github.com/andreahlert/mountdesk/actions/workflows/build.yml">
     <img src="https://github.com/andreahlert/mountdesk/actions/workflows/build.yml/badge.svg" alt="Build RPM">
   </a>
+  <a href="https://copr.fedorainfracloud.org/coprs/andreahlert/mountdesk/">
+    <img src="https://copr.fedorainfracloud.org/coprs/andreahlert/mountdesk/package/mountdesk/status_image/last_build.png" alt="COPR Build">
+  </a>
   <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License">
   <img src="https://img.shields.io/badge/Fedora-43-294172?logo=fedora&logoColor=white" alt="Fedora">
   <img src="https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white" alt="Python">
