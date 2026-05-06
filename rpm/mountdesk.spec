@@ -1,5 +1,5 @@
 Name:           mountdesk
-Version:        1.0.4
+Version:        1.0.5
 Release:        1%{?dist}
 Summary:        MountDesk - Generic cloud drive desktop integration via rclone FUSE
 License:        MIT
@@ -52,6 +52,7 @@ install -Dm755 src/lib/setup.sh                  %{buildroot}%{_libdir}/mountdes
 install -Dm755 src/lib/fix-keyring.sh            %{buildroot}%{_libdir}/mountdesk/fix-keyring.sh
 install -Dm755 src/lib/mountdesk-wizard.py    %{buildroot}%{_libdir}/mountdesk/mountdesk-wizard.py
 install -Dm755 src/lib/mountdesk-app.py       %{buildroot}%{_libdir}/mountdesk/mountdesk-app.py
+install -Dm755 src/lib/mountdesk-prewarm.py   %{buildroot}%{_libdir}/mountdesk/mountdesk-prewarm.py
 
 
 # Default config
@@ -77,9 +78,11 @@ install -Dm644 src/icons/128x128/google-slides.png %{buildroot}%{_datadir}/icons
 install -Dm644 src/icons/256x256/mountdesk.png     %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/mountdesk.png
 install -Dm644 src/icons/scalable/mountdesk.svg    %{buildroot}%{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
 
-# Systemd user service (tray only - mounts are generated dynamically)
-install -Dm644 src/systemd/mountdesk-tray.service  %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
+# Systemd user services (tray + prewarm only - drive mounts are generated dynamically)
+install -Dm644 src/systemd/mountdesk-tray.service     %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
+install -Dm644 src/systemd/mountdesk-prewarm.service  %{buildroot}/usr/lib/systemd/user/mountdesk-prewarm.service
 sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
+sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}/usr/lib/systemd/user/mountdesk-prewarm.service
 
 # AppData / Metainfo
 install -Dm644 src/metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_metainfodir}/com.mountdesk.drive.metainfo.xml
@@ -105,6 +108,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_datadir}/icons/hicolor/256x256/apps/mountdesk.png
 %{_datadir}/icons/hicolor/scalable/apps/mountdesk.svg
 /usr/lib/systemd/user/mountdesk-tray.service
+/usr/lib/systemd/user/mountdesk-prewarm.service
 %{_metainfodir}/com.mountdesk.drive.metainfo.xml
 %{_datadir}/mime/packages/mountdesk.xml
 
@@ -117,6 +121,12 @@ update-desktop-database -q %{_datadir}/applications &> /dev/null || :
 update-mime-database -n %{_datadir}/mime &> /dev/null || :
 
 %changelog
+* Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.5-1
+- Add mountdesk-prewarm oneshot service: walks each mountpoint to depth 2
+  after login so first Nemo navigation is instant (~150ms vs cold ~3s)
+- Tray shows "Aquecendo: i/N <drive>" progress while prewarm runs
+- prewarm waits for at least one mount before walking; skips unmounted
+
 * Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.4-1
 - Tune rclone VFS flags for snappier Nemo browsing: dir-cache-time 24h,
   poll-interval 15s, attr-timeout 1s, no-modtime, vfs-fast-fingerprint

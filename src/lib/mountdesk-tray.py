@@ -16,6 +16,7 @@ gi.require_version('AppIndicator3', '0.1')
 from gi.repository import Gtk, AppIndicator3, GObject, GLib
 
 CONFIG_PATH = os.path.expanduser("~/.config/mountdesk/config.yaml")
+PREWARM_STATUS = "/tmp/mountdesk-prewarm.status"
 
 
 def load_config():
@@ -97,12 +98,27 @@ class MountDeskTrayApp:
     def _svc_name(self, drive):
         return drive["remote"]
 
+    def _read_prewarm_status(self):
+        try:
+            with open(PREWARM_STATUS) as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            return None
+        except Exception:
+            return None
+
     def _build_menu(self):
         # Título
         title = Gtk.MenuItem(label="MountDesk")
         title.set_sensitive(False)
         self.menu.append(title)
         self.menu.append(Gtk.SeparatorMenuItem())
+
+        # Pre-warm progress (hidden by default)
+        self.prewarm_item = Gtk.MenuItem(label="🔄 Aquecendo caches...")
+        self.prewarm_item.set_sensitive(False)
+        self.prewarm_item.set_visible(False)
+        self.menu.append(self.prewarm_item)
 
         # Drives (status + click abre mountpoint)
         self.drive_items = []
@@ -141,11 +157,22 @@ class MountDeskTrayApp:
     def _start_refresh(self):
         interval = self.settings.get("tray_refresh_interval", 5)
         GLib.timeout_add_seconds(interval, self._refresh_status)
+        # Faster polling for pre-warm progress
+        GLib.timeout_add_seconds(1, self._refresh_prewarm)
 
     def _refresh_status(self):
         for item, drive, svc in self.drive_items:
             active = is_service_active(svc)
             item.set_label(f"{'🟢' if active else '🔴'} {drive['name']}")
+        return True
+
+    def _refresh_prewarm(self):
+        status = self._read_prewarm_status()
+        if status:
+            self.prewarm_item.set_label(f"🔄 Aquecendo: {status}")
+            self.prewarm_item.set_visible(True)
+        else:
+            self.prewarm_item.set_visible(False)
         return True
 
 

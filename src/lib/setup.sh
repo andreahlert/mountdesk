@@ -142,6 +142,26 @@ echo "Starting tray app..."
 systemctl --user enable mountdesk-tray 2>/dev/null || true
 systemctl --user restart mountdesk-tray 2>/dev/null || true
 
+# 7. Pre-warm cache (oneshot, kicks off immediately)
+PREWARM_SERVICE="$SYSTEMD_DIR/mountdesk-prewarm.service"
+cat > "$PREWARM_SERVICE" << 'EOF'
+[Unit]
+Description=MountDesk pre-warm filesystem cache
+After=mountdesk-tray.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /usr/lib/mountdesk/mountdesk-prewarm.py
+Nice=10
+RemainAfterExit=no
+
+[Install]
+WantedBy=default.target
+EOF
+systemctl --user daemon-reload
+systemctl --user enable mountdesk-prewarm 2>/dev/null || true
+systemctl --user start --no-block mountdesk-prewarm 2>/dev/null || true
+
 echo ""
 echo "=== Setup complete ==="
 echo "MountDesk is running."
