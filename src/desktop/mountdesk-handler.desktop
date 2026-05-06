@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Open in Google Drive (App Window)
+Comment=Open Google Docs/Sheets/Slides in a Chrome app window
+Exec=/usr/bin/mountdesk-open-file %f
+Icon=mountdesk
+Terminal=false
+NoDisplay=true
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;application/vnd.openxmlformats-officedocument.presentationml.presentation;application/vnd.oasis.opendocument.text;application/vnd.oasis.opendocument.spreadsheet;application/vnd.oasis.opendocument.presentation;text/csv;
+Categories=Utility;

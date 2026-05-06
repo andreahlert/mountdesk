@@ -103,7 +103,7 @@ class MountDeskTrayApp:
         self.menu.append(title)
         self.menu.append(Gtk.SeparatorMenuItem())
 
-        # Drives
+        # Drives (status + click abre mountpoint)
         self.drive_items = []
         for drive in self.drives:
             ensure_service(drive)
@@ -117,24 +117,9 @@ class MountDeskTrayApp:
 
         self.menu.append(Gtk.SeparatorMenuItem())
 
-        # Ações
-        sync = Gtk.MenuItem(label="🔄 Sync / Refresh Icons")
-        sync.connect("activate", self._sync_all)
-        self.menu.append(sync)
-
-        mainwin = Gtk.MenuItem(label="🏠 Open MountDesk")
-        mainwin.connect("activate", self._open_main)
-        self.menu.append(mainwin)
-
-        wizard = Gtk.MenuItem(label="⚙️ Configure Drives")
+        wizard = Gtk.MenuItem(label="⚙️ Configure")
         wizard.connect("activate", self._open_wizard)
         self.menu.append(wizard)
-
-        config = Gtk.MenuItem(label="📄 Open Config (YAML)")
-        config.connect("activate", self._open_config)
-        self.menu.append(config)
-
-        self.menu.append(Gtk.SeparatorMenuItem())
 
         quit_item = Gtk.MenuItem(label="Quit")
         quit_item.connect("activate", self._quit)
@@ -146,31 +131,8 @@ class MountDeskTrayApp:
         mp = os.path.expanduser(drive['mountpoint'])
         subprocess.Popen(["nemo", mp])
 
-    def _sync_all(self, widget):
-        fix = os.path.expanduser("~/bin/mountdesk-fix-icons")
-        if not os.path.exists(fix):
-            fix = "/usr/bin/mountdesk-fix-icons"
-        if os.path.exists(fix):
-            subprocess.Popen([fix])
-        for item, drive, svc in self.drive_items:
-            active = is_service_active(svc)
-            item.set_label(f"{'🟢' if active else '🔴'} {drive['name']}")
-
-    def _open_main(self, widget):
-        subprocess.Popen([
-            "/usr/bin/python3",
-            os.path.expanduser("~/.local/lib/mountdesk/mountdesk-app.py")
-        ])
-
     def _open_wizard(self, widget):
-        wizard = os.path.expanduser("~/.local/lib/mountdesk/mountdesk-wizard.py")
-        if not os.path.exists(wizard):
-            wizard = "/usr/lib/mountdesk/mountdesk-wizard.py"
-        if os.path.exists(wizard):
-            subprocess.Popen(["/usr/bin/python3", wizard])
-
-    def _open_config(self, widget):
-        subprocess.Popen(["xdg-open", CONFIG_PATH])
+        subprocess.Popen(["/usr/bin/python3", "/usr/lib/mountdesk/mountdesk-wizard.py"])
 
     def _quit(self, widget):
         Gtk.main_quit()

@@ -57,6 +57,12 @@ def open_default(filepath):
     subprocess.Popen(["xdg-open", filepath])
 
 
+def _authuser_suffix(account_email):
+    if not account_email:
+        return ""
+    return f"?authuser={urllib.parse.quote(account_email)}"
+
+
 def open_in_gdrive(filepath):
     """Abre arquivo no Google Drive via navegador em modo app."""
     try:
@@ -65,6 +71,9 @@ def open_in_gdrive(filepath):
     except Exception:
         open_default(filepath)
         return
+
+    account_email = (config.get("settings") or {}).get("account_email", "") or ""
+    auth = _authuser_suffix(account_email)
 
     matched_remote = None
     rel_path = None
@@ -95,18 +104,18 @@ def open_in_gdrive(filepath):
                 mime = item.get("MimeType", "")
                 if fid:
                     if "spreadsheet" in mime:
-                        url = f"https://docs.google.com/spreadsheets/d/{fid}/edit"
+                        url = f"https://docs.google.com/spreadsheets/d/{fid}/edit{auth}"
                     elif "presentation" in mime:
-                        url = f"https://docs.google.com/presentation/d/{fid}/edit"
+                        url = f"https://docs.google.com/presentation/d/{fid}/edit{auth}"
                     else:
-                        url = f"https://docs.google.com/document/d/{fid}/edit"
+                        url = f"https://docs.google.com/document/d/{fid}/edit{auth}"
                     open_app_window(url)
                     return
     except Exception:
         pass
 
     # Fallback: abrir pasta no Drive
-    url = "https://drive.google.com/drive/my-drive"
+    url = f"https://drive.google.com/drive/my-drive{auth}"
     open_app_window(url)
 
 

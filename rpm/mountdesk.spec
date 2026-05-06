@@ -1,5 +1,5 @@
 Name:           mountdesk
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        MountDesk - Generic cloud drive desktop integration via rclone FUSE
 License:        MIT
@@ -63,6 +63,7 @@ install -Dm644 src/nemo/mountdesk-nemo.py        %{buildroot}%{_datadir}/nemo-py
 # Desktop entries
 install -Dm644 src/desktop/mountdesk.desktop     %{buildroot}%{_datadir}/applications/mountdesk.desktop
 install -Dm644 src/desktop/mountdesk-wizard.desktop %{buildroot}%{_datadir}/applications/mountdesk-wizard.desktop
+install -Dm644 src/desktop/mountdesk-handler.desktop %{buildroot}%{_datadir}/applications/mountdesk-handler.desktop
 sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}%{_datadir}/applications/mountdesk.desktop
 sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}%{_datadir}/applications/mountdesk-wizard.desktop
 
@@ -78,6 +79,7 @@ install -Dm644 src/icons/scalable/mountdesk.svg    %{buildroot}%{_datadir}/icons
 
 # Systemd user service (tray only - mounts are generated dynamically)
 install -Dm644 src/systemd/mountdesk-tray.service  %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
+sed -i "s|/usr/lib/mountdesk|%{_libdir}/mountdesk|g" %{buildroot}/usr/lib/systemd/user/mountdesk-tray.service
 
 # AppData / Metainfo
 install -Dm644 src/metainfo/com.mountdesk.drive.metainfo.xml %{buildroot}%{_metainfodir}/com.mountdesk.drive.metainfo.xml
@@ -96,6 +98,7 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_datadir}/nemo-python/extensions/mountdesk-nemo.py
 %{_datadir}/applications/mountdesk.desktop
 %{_datadir}/applications/mountdesk-wizard.desktop
+%{_datadir}/applications/mountdesk-handler.desktop
 %{_datadir}/icons/hicolor/*/apps/google-sheets.png
 %{_datadir}/icons/hicolor/*/apps/google-docs.png
 %{_datadir}/icons/hicolor/*/apps/google-slides.png
@@ -105,7 +108,24 @@ install -Dm644 src/mime/override-rclone-empty.xml %{buildroot}%{_datadir}/mime/p
 %{_metainfodir}/com.mountdesk.drive.metainfo.xml
 %{_datadir}/mime/packages/mountdesk.xml
 
+%post
+update-desktop-database -q %{_datadir}/applications &> /dev/null || :
+update-mime-database -n %{_datadir}/mime &> /dev/null || :
+
+%postun
+update-desktop-database -q %{_datadir}/applications &> /dev/null || :
+update-mime-database -n %{_datadir}/mime &> /dev/null || :
+
 %changelog
+* Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.1-1
+- Fix wizard NameError: missing 're' import broke drive selection
+- Fix tray service path (was hardcoded to ~/.local/lib, now /usr/lib)
+- Fix nemo extension and setup.sh helper paths
+- Add mountdesk-handler.desktop registering MIME types for app-window open
+- Persist OAuth account email and inject ?authuser= to fix multi-account redirect
+- Simplify tray menu to drives + Configure + Quit
+- Run update-desktop-database / update-mime-database on install
+
 * Mon May 04 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.0-1
 - Generic cloud drive desktop integration
 - YAML-configurable drives

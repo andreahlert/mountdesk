@@ -45,7 +45,7 @@ class MountDeskMenuProvider(GObject.GObject, Nemo.MenuProvider):
     def _open_in_gdrive(self, menu, files):
         for f in files:
             path = urllib.parse.unquote(f.get_uri()[7:])
-            subprocess.Popen([os.path.expanduser('~/bin/mountdesk-open-link'), path])
+            subprocess.Popen(['/usr/bin/mountdesk-open-link', path])
 
     def get_file_items(self, window, files):
         if not files or not is_in_mount(files[0]):

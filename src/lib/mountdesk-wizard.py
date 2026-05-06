@@ -6,6 +6,7 @@ Fluxo: Boas-vindas → OAuth Google → Selecionar Drives → Configurar Montage
 
 import os
 import sys
+import re
 import subprocess
 import yaml
 import threading
@@ -311,6 +312,13 @@ class WizardWindow(Adw.ApplicationWindow):
             # Listar drives compartilhados via API
             log.info("Fetching shared drives from Google API")
             service = build('drive', 'v3', credentials=creds, static_discovery=False)
+            try:
+                about = service.about().get(fields='user(emailAddress)').execute()
+                self.account_email = about.get('user', {}).get('emailAddress', '')
+                log.info("OAuth account email: %s", self.account_email)
+            except Exception:
+                log.exception("Failed to fetch account email")
+                self.account_email = ''
             results = service.drives().list(pageSize=100).execute()
             self.drives = results.get('drives', [])
             log.info("Found %d shared drives", len(self.drives))
@@ -419,22 +427,33 @@ team_drive =
             self.drive_check_rows.append((drive, check))
 
     def _on_drives_next(self, btn):
+        log.info("Continue clicked on drives page (%d rows)", len(self.drive_check_rows))
         self.selected_drives = []
         for drive, check in self.drive_check_rows:
             if check.get_active():
                 self.selected_drives.append(drive)
+        log.info("Selected %d drive(s): %s", len(self.selected_drives),
+                 [d.get("name") for d in self.selected_drives])
 
         if not self.selected_drives:
+            log.warning("No drive selected, showing dialog")
             dialog = Adw.MessageDialog.new(self, "No drive selected",
                 "Select at least one drive to continue.")
             dialog.add_response("ok", "OK")
             dialog.present()
             return
 
-        self._build_mounts_from_selection()
+        try:
+            self._build_mounts_from_selection()
+        except Exception:
+            log.exception("Failed to build mounts page")
+            return
+        log.info("Switching to mounts page")
         self.stack.set_visible_child_name("mounts")
+        log.info("Stack now on: %s", self.stack.get_visible_child_name())
 
     def _build_mounts_from_selection(self):
+        log.debug("Building mounts page from %d selected drive(s)", len(self.selected_drives))
         # Limpar
         while True:
             row = self.mounts_box.get_first_child()
@@ -461,7 +480,7 @@ team_drive =
             self.mount_rows.append((drive, entry))
 
     def _on_finish(self, btn):
-        log.info("Applying configuration")
+        log.info("Apply and Mount clicked (%d mount rows)", len(self.mount_rows))
         drives_config = []
 
         for drive, entry in self.mount_rows:
@@ -484,6 +503,7 @@ team_drive =
             "drives": drives_config,
             "settings": {
                 "tray_refresh_interval": 5,
+                "account_email": getattr(self, 'account_email', ''),
                 "icons": {
                     "sheets": "google-sheets",
                     "docs": "google-docs",
@@ -497,6 +517,7 @@ team_drive =
             yaml.dump(config, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
         log.info("Saved config to %s", CONFIG_PATH)
 
+        log.info("Switching to finish page and running setup")
         self.stack.set_visible_child_name("finish")
         self._run_setup()
 
@@ -555,10 +576,13 @@ team_drive = {team_drive_id}
         self.finish_spinner.start()
         self.finish_close_btn.set_visible(False)
 
+        setup_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "setup.sh")
+        log.info("Running setup script: %s", setup_script)
+
         def do_setup():
             try:
                 result = subprocess.run(
-                    ["/usr/bin/bash", os.path.expanduser("~/.local/lib/mountdesk/setup.sh")],
+                    ["/usr/bin/bash", setup_script],
                     capture_output=True, text=True, timeout=180
                 )
                 ok = result.returncode == 0

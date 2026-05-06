@@ -84,32 +84,46 @@ done
 # 4. Fix icons
 echo ""
 echo "Updating icons..."
-~/bin/mountdesk-fix-icons 2>/dev/null || true
+/usr/bin/mountdesk-fix-icons 2>/dev/null || true
 
-# 5. Service do tray app
+# 5. Register MIME handler for Google export formats (open in Chrome --app=)
+HANDLER_DESKTOP="mountdesk-handler.desktop"
+if [[ -f "/usr/share/applications/$HANDLER_DESKTOP" ]]; then
+    for mime in \
+        application/vnd.openxmlformats-officedocument.wordprocessingml.document \
+        application/vnd.openxmlformats-officedocument.spreadsheetml.sheet \
+        application/vnd.openxmlformats-officedocument.presentationml.presentation \
+        application/vnd.oasis.opendocument.text \
+        application/vnd.oasis.opendocument.spreadsheet \
+        application/vnd.oasis.opendocument.presentation \
+        text/csv ; do
+        xdg-mime default "$HANDLER_DESKTOP" "$mime" 2>/dev/null || true
+    done
+    update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+fi
+
+# 6. Service do tray app (always overwrite to fix stale paths from earlier installs)
 TRAY_SERVICE="$SYSTEMD_DIR/mountdesk-tray.service"
-if [[ ! -f "$TRAY_SERVICE" ]]; then
-    cat > "$TRAY_SERVICE" << 'EOF'
+cat > "$TRAY_SERVICE" << 'EOF'
 [Unit]
 Description=MountDesk Tray App
 After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 %h/.local/lib/mountdesk/mountdesk-tray.py
+ExecStart=/usr/bin/python3 /usr/lib/mountdesk/mountdesk-tray.py
 Restart=on-failure
 RestartSec=10
 
 [Install]
 WantedBy=default.target
 EOF
-    systemctl --user daemon-reload
-fi
+systemctl --user daemon-reload
 
 echo ""
 echo "Starting tray app..."
 systemctl --user enable mountdesk-tray 2>/dev/null || true
-systemctl --user start mountdesk-tray 2>/dev/null || true
+systemctl --user restart mountdesk-tray 2>/dev/null || true
 
 echo ""
 echo "=== Setup complete ==="
