@@ -52,7 +52,11 @@ for drive in config.get("drives", []):
     service_name = remote
     service_file = os.path.join(systemd_dir, f"{service_name}.service")
     
-    if not os.path.isdir(mountpoint): os.makedirs(mountpoint, exist_ok=True)
+    try:
+        os.makedirs(mountpoint, exist_ok=True)
+    except FileExistsError:
+        # Path exists as a live FUSE mount; nothing to create.
+        pass
     
     unit = f"""[Unit]
 Description=MountDesk mount - {name}
