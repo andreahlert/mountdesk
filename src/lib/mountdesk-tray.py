@@ -36,9 +36,8 @@ def is_service_active(name):
 
 
 def ensure_service(drive):
-    # systemd só aceita [a-z0-9-] em nomes de unidade
-    safe = re.sub(r'[^a-z0-9-]', '', drive["name"].lower().replace(' ', '-'))
-    svc = f"mountdesk-{safe}"
+    # remote name is canonical service name (already prefixed `mountdesk-` and slugified)
+    svc = drive["remote"]
     file_path = os.path.expanduser(f"~/.config/systemd/user/{svc}.service")
     mountpoint = os.path.expanduser(drive["mountpoint"])
     remote = drive["remote"]
@@ -93,8 +92,7 @@ class MountDeskTrayApp:
         self._start_refresh()
 
     def _svc_name(self, drive):
-        safe = re.sub(r'[^a-z0-9-]', '', drive['name'].lower().replace(' ', '-'))
-        return f"mountdesk-{safe}"
+        return drive["remote"]
 
     def _build_menu(self):
         # Título

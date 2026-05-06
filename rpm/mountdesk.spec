@@ -1,5 +1,5 @@
 Name:           mountdesk
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        MountDesk - Generic cloud drive desktop integration via rclone FUSE
 License:        MIT
@@ -117,6 +117,12 @@ update-desktop-database -q %{_datadir}/applications &> /dev/null || :
 update-mime-database -n %{_datadir}/mime &> /dev/null || :
 
 %changelog
+* Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.2-1
+- Fix collisions when multiple shared drives share a name: dedup remote/mountpoint via drive_id suffix
+- Slugify drive names (strip accents, parentheses, special chars) for safe systemd unit and rclone remote names
+- Use drive["remote"] as canonical service name across tray/app/setup, removing fragile name-regex paths
+- Sweep stale mountdesk-*.service units on setup so renamed/removed drives don't linger
+
 * Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.1-1
 - Fix wizard NameError: missing 're' import broke drive selection
 - Fix tray service path (was hardcoded to ~/.local/lib, now /usr/lib)

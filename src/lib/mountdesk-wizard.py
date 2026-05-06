@@ -8,6 +8,7 @@ import os
 import sys
 import re
 import subprocess
+import unicodedata
 import yaml
 import threading
 import json
@@ -50,6 +51,30 @@ MOUNT_BASE = os.path.expanduser("~/GoogleDrive")
 RCLONE_CLIENT_ID = "202264815644.apps.googleusercontent.com"
 RCLONE_CLIENT_SECRET = "X4Z3ca8xfWDb1Voo-F9a7ZxJ"
 SCOPES = ['https://www.googleapis.com/auth/drive']
+
+
+def slugify(text):
+    nfd = unicodedata.normalize('NFD', text)
+    ascii_text = ''.join(c for c in nfd if unicodedata.category(c) != 'Mn')
+    ascii_text = ascii_text.encode('ascii', 'ignore').decode('ascii').lower()
+    ascii_text = re.sub(r'[\s/]+', '-', ascii_text)
+    ascii_text = re.sub(r'[^a-z0-9_-]', '', ascii_text)
+    ascii_text = re.sub(r'-+', '-', ascii_text).strip('-_')
+    return ascii_text or 'drive'
+
+
+def make_unique(base, drive_id, used):
+    candidate = base
+    if candidate in used:
+        suffix = (drive_id or 'personal')[:6].lower()
+        suffix = re.sub(r'[^a-z0-9]', '', suffix) or 'x'
+        candidate = f"{base}-{suffix}"
+        i = 2
+        while candidate in used:
+            candidate = f"{base}-{suffix}-{i}"
+            i += 1
+    used.add(candidate)
+    return candidate
 
 
 class WizardWindow(Adw.ApplicationWindow):
@@ -462,16 +487,21 @@ team_drive =
             self.mounts_box.remove(row)
 
         self.mount_rows = []
+        used_paths = set()
         for drive in self.selected_drives:
             name = drive.get("name", "drive")
             drive_id = drive.get("id", "")
-            safe_name = re.sub(r'[^a-zA-Z0-9_-]', '', name.replace(' ', '_'))
+            slug = slugify(name)
+            unique_slug = make_unique(slug, drive_id, used_paths)
+            mount_default = os.path.join(MOUNT_BASE, unique_slug)
 
             row = Adw.ActionRow()
             row.set_title(name)
+            if slug != unique_slug:
+                row.set_subtitle(f"Renamed (collision): {unique_slug}")
 
             entry = Gtk.Entry()
-            entry.set_text(os.path.join(MOUNT_BASE, safe_name))
+            entry.set_text(mount_default)
             entry.set_width_chars(35)
             row.add_suffix(entry)
             row.drive_id = drive_id
@@ -482,14 +512,16 @@ team_drive =
     def _on_finish(self, btn):
         log.info("Apply and Mount clicked (%d mount rows)", len(self.mount_rows))
         drives_config = []
+        used_remotes = set()
 
         for drive, entry in self.mount_rows:
             name = drive.get("name", "drive")
             drive_id = drive.get("id", "")
             mountpoint = entry.get_text()
-            safe_name = name.replace(" ", "_").replace("/", "_")
+            slug = slugify(name)
+            unique_slug = make_unique(slug, drive_id, used_remotes)
+            remote_name = f"mountdesk-{unique_slug}"
 
-            remote_name = f"mountdesk-{safe_name.lower()}"
             self._add_rclone_remote(remote_name, drive_id)
 
             drives_config.append({

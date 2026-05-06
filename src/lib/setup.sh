@@ -18,7 +18,18 @@ if [[ ! -f "$CONFIG_DIR/config.yaml" ]]; then
     exit 1
 fi
 
-# 2. Gerar services systemd para cada drive
+# 2. Sweep stale mountdesk drive services (keep tray)
+for unit in "$SYSTEMD_DIR"/mountdesk-*.service; do
+    [[ -f "$unit" ]] || continue
+    base=$(basename "$unit" .service)
+    [[ "$base" == "mountdesk-tray" ]] && continue
+    systemctl --user stop "$base" 2>/dev/null || true
+    systemctl --user disable "$base" 2>/dev/null || true
+    rm -f "$unit"
+done
+systemctl --user daemon-reload
+
+# 3. Gerar services systemd para cada drive
 python3 << 'PYEOF'
 import os, yaml, sys, re
 
@@ -37,9 +48,8 @@ for drive in config.get("drives", []):
     name = drive["name"]
     remote = drive["remote"]
     mountpoint = os.path.expanduser(drive["mountpoint"])
-    # systemd só aceita [a-z0-9-] em nomes de unidade
-    safe_name = re.sub(r'[^a-z0-9-]', '', name.lower().replace(' ', '-'))
-    service_name = f"mountdesk-{safe_name}"
+    # remote name is already prefixed `mountdesk-` and slugified by wizard
+    service_name = remote
     service_file = os.path.join(systemd_dir, f"{service_name}.service")
     
     if not os.path.isdir(mountpoint): os.makedirs(mountpoint, exist_ok=True)

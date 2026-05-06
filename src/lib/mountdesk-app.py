@@ -36,10 +36,8 @@ def is_service_active(name):
         return False
 
 
-def svc_name(drive_name):
-    import re
-    safe = re.sub(r'[^a-z0-9-]', '', drive_name.lower().replace(' ', '-'))
-    return f"mountdesk-{safe}"
+def svc_name(drive):
+    return drive["remote"]
 
 
 class DriveRow(Gtk.Box):
@@ -111,7 +109,7 @@ class DriveRow(Gtk.Box):
         self._update_status()
 
     def _update_status(self):
-        active = is_service_active(svc_name(self.drive['name']))
+        active = is_service_active(svc_name(self.drive))
         if active:
             self.status_lbl.set_markup("<span color='#26a269'>🟢 Mounted</span>")
         else:
