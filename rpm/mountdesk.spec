@@ -1,5 +1,5 @@
 Name:           mountdesk
-Version:        1.0.2
+Version:        1.0.3
 Release:        1%{?dist}
 Summary:        MountDesk - Generic cloud drive desktop integration via rclone FUSE
 License:        MIT
@@ -117,6 +117,11 @@ update-desktop-database -q %{_datadir}/applications &> /dev/null || :
 update-mime-database -n %{_datadir}/mime &> /dev/null || :
 
 %changelog
+* Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.3-1
+- AppStream metainfo: fix homepage URL, add categories, keywords, bugtracker, vcs-browser
+- Replace deprecated developer_name with developer block (required for GNOME Software listing)
+- Add 1.0.1, 1.0.2, 1.0.3 release entries
+
 * Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.2-1
 - Fix collisions when multiple shared drives share a name: dedup remote/mountpoint via drive_id suffix
 - Slugify drive names (strip accents, parentheses, special chars) for safe systemd unit and rclone remote names

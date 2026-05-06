@@ -2,19 +2,57 @@
 <component type="desktop-application">
   <id>com.mountdesk.drive</id>
   <name>MountDesk</name>
-  <summary>Generic cloud drive desktop integration</summary>
+  <summary>Mount cloud drives on the desktop via rclone</summary>
   <description>
-    <p>MountDesk integrates any cloud storage into the Linux desktop via rclone FUSE mounts.</p>
-    <p>Configure any number of drives via YAML, get tray controls, colored file manager icons,
-    and right-click "Open in Cloud" for all your mounted files.</p>
+    <p>MountDesk integrates any cloud storage (Google Drive, OneDrive, Dropbox, etc.)
+    into the Linux desktop via rclone FUSE mounts.</p>
+    <p>Features:</p>
+    <ul>
+      <li>One-click Google login wizard</li>
+      <li>Auto-mount on login via systemd user services</li>
+      <li>System tray with per-drive status</li>
+      <li>Nemo file manager integration with Google icons</li>
+      <li>"Open in Google Drive" right-click for cloud-native files</li>
+    </ul>
   </description>
   <launchable type="desktop-id">mountdesk.desktop</launchable>
   <icon type="stock">mountdesk</icon>
-  <url type="homepage">https://github.com/mountdesk/mountdesk</url>
-  <developer_name>André Ahlert Junior</developer_name>
+  <url type="homepage">https://github.com/andreahlert/mountdesk</url>
+  <url type="bugtracker">https://github.com/andreahlert/mountdesk/issues</url>
+  <url type="vcs-browser">https://github.com/andreahlert/mountdesk</url>
+  <developer id="partners.aex">
+    <name>André Ahlert</name>
+  </developer>
   <project_license>MIT</project_license>
   <metadata_license>CC0-1.0</metadata_license>
+  <categories>
+    <category>Utility</category>
+    <category>FileManager</category>
+    <category>Network</category>
+  </categories>
+  <keywords>
+    <keyword>cloud</keyword>
+    <keyword>drive</keyword>
+    <keyword>rclone</keyword>
+    <keyword>fuse</keyword>
+    <keyword>mount</keyword>
+    <keyword>google</keyword>
+  </keywords>
+  <provides>
+    <binary>mountdesk-open-file</binary>
+    <binary>mountdesk-open-link</binary>
+    <binary>mountdesk-fix-icons</binary>
+  </provides>
   <releases>
+    <release version="1.0.3" date="2026-05-06">
+      <description><p>AppStream metadata fixes for GNOME Software listing.</p></description>
+    </release>
+    <release version="1.0.2" date="2026-05-06">
+      <description><p>Dedup colliding drive names; slugify special chars; sweep stale services.</p></description>
+    </release>
+    <release version="1.0.1" date="2026-05-06">
+      <description><p>Wizard import fix; tray service path fix; multi-account OAuth handling.</p></description>
+    </release>
     <release version="1.0.0" date="2026-05-04">
       <description><p>Initial release with YAML-configurable drives.</p></description>
     </release>
