@@ -1,5 +1,5 @@
 NAME = mountdesk
-VERSION = 1.0.3
+VERSION = 1.0.4
 SPEC = rpm/$(NAME).spec
 
 .PHONY: all rpm clean install

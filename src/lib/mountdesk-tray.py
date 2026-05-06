@@ -52,11 +52,14 @@ Wants=network-online.target
 Type=notify
 ExecStart=/usr/bin/rclone mount {remote}: {mountpoint} \\
   --vfs-cache-mode full \\
-  --vfs-cache-max-age 1h \\
-  --vfs-cache-max-size 2G \\
+  --vfs-cache-max-age 24h \\
+  --vfs-cache-max-size 4G \\
   --vfs-read-chunk-size 16M \\
-  --dir-cache-time 5m \\
-  --poll-interval 1m \\
+  --vfs-fast-fingerprint \\
+  --dir-cache-time 24h \\
+  --poll-interval 15s \\
+  --attr-timeout 1s \\
+  --no-modtime \\
   --allow-non-empty
 ExecStop=/bin/fusermount -u {mountpoint}
 Restart=on-failure

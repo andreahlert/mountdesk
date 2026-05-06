@@ -44,6 +44,9 @@
     <binary>mountdesk-fix-icons</binary>
   </provides>
   <releases>
+    <release version="1.0.4" date="2026-05-06">
+      <description><p>Tune rclone VFS flags for snappier file manager browsing.</p></description>
+    </release>
     <release version="1.0.3" date="2026-05-06">
       <description><p>AppStream metadata fixes for GNOME Software listing.</p></description>
     </release>

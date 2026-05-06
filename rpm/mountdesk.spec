@@ -1,5 +1,5 @@
 Name:           mountdesk
-Version:        1.0.3
+Version:        1.0.4
 Release:        1%{?dist}
 Summary:        MountDesk - Generic cloud drive desktop integration via rclone FUSE
 License:        MIT
@@ -117,6 +117,12 @@ update-desktop-database -q %{_datadir}/applications &> /dev/null || :
 update-mime-database -n %{_datadir}/mime &> /dev/null || :
 
 %changelog
+* Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.4-1
+- Tune rclone VFS flags for snappier Nemo browsing: dir-cache-time 24h,
+  poll-interval 15s, attr-timeout 1s, no-modtime, vfs-fast-fingerprint
+- Bigger VFS cache (4G/24h) reduces re-fetch on revisits
+- Mirror flags in setup.sh and tray.ensure_service per CLAUDE.md rule
+
 * Wed May 06 2026 André Ahlert Junior <andreahlert@gmail.com> - 1.0.3-1
 - AppStream metainfo: fix homepage URL, add categories, keywords, bugtracker, vcs-browser
 - Replace deprecated developer_name with developer block (required for GNOME Software listing)
